@@ -12,6 +12,8 @@ class AddSourceTableViewCell: UITableViewCell {
 
     @IBOutlet weak var lbl: UILabel!
     @IBOutlet weak var btn: UIButton!
+    @IBOutlet weak var twitterBtn: UIButton!
+    @IBOutlet weak var instagramBtn: UIButton!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
