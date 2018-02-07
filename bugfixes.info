@@ -1,0 +1,5 @@
+BugFix 0-1:
+ - Fixed the remove button (on the rss setup page) adding items when in "search mode"
+ - Fixed the add button (on the rss setup page) adding the "No items found" message to the setup
+ - Fixed the "No items found" message (on the rss setup page) TextField length (replaced w/ "Couldn't find anything ;(")
+ - Killed a couple of FireAnts /s

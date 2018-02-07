@@ -17,8 +17,8 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
     @IBOutlet weak var searchRssField: UITextField!
     let tableHeight = 44
     
-    var rssData:[[String]] = [["Verge", "https://theverge.org"], ["Bloomberg", "https://bloomberg.com"]]
-    var defaults = [["Bloomberg", "https://bloomberg.com"]]
+    var rssData:[[String]] = []
+    var defaults: [[String]] = []
     var rssSorted: [[String]] = [[]]
     
     var needsReload = true
@@ -60,13 +60,15 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                 cell.btn.addTarget(self, action: #selector(handleAdd(sender:)), for: .touchUpInside)
                 print("\(defaults.joined()) -> \(rssSorted[indexPath.row][0]) (\(indexPath.row)")
                 if(defaults.joined().contains(rssSorted[indexPath.row][0])) {
-//                    cell.btn.setTitle("Remove", for: .normal)
-                    
                     cell.btn.setBackgroundImage(UIImage(named: "ic_remove_circle_48pt_3x"), for: .normal)
+                    cell.btn.removeTarget(nil, action: nil, for: .allEvents)
+                    cell.btn.addTarget(self, action: #selector(handleRemove(sender:)), for: .touchUpInside)
                 } else {
-//                    cell.btn.setTitle("Add", for: .normal)
-                    print("Add")
-                    cell.btn.setBackgroundImage(UIImage(named: "add_btn"), for: .normal)
+                    if(rssSorted[indexPath.row][1] == "nourl") {
+                        cell.btn.isHidden = true
+                    } else {
+                        cell.btn.setBackgroundImage(UIImage(named: "add_btn"), for: .normal)
+                    }
                 }
             }
         }
@@ -92,7 +94,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                 }
             }
             if (rssSorted.count == 0) {
-                rssSorted = [["No News Sources Found...", "nourl"]]
+                rssSorted = [["Couldn't find anything ;(", "nourl"]]
             }
             
             rssTable.frame.size.height = getTableSize()
