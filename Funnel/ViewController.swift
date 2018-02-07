@@ -88,6 +88,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
                             } else {
                                 self.performSegue(withIdentifier: "menuToMain", sender: self)
                             }
+                        } else {
+                            self.alert(msg: "The username or password was incorrect...", title: "Error")
                         }
                     }
                 }
