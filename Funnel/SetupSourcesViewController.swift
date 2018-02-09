@@ -22,7 +22,8 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
     var rssData:[[String]] = []
     var defaults: [[String]] = []
     var rssSorted: [[String]] = [[]]
-    var socialMediaData: [String] = ["r/ProgrammerHumor"]
+    var socialMediaData: [[String]] = []
+    var socialMediaSort: [String] = []
     
     var needsReload = true
     var loadDefaults = true
@@ -60,6 +61,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
             defaults.remove(at: sender.tag)
             DispatchQueue.main.async {
                 self.rssTable.reloadData()
+                self.rssTable.frame.size.height = self.getTableSizeForRSS()
                 self.needsReload = true
             }
     }
@@ -73,11 +75,28 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                     self.rssTable.reloadData()
             }
     }
+    
+    @objc func handleInstagram(sender: UIButton) {
+        
+    }
+    @objc func handleReddit(sender: UIButton) {
+        
+    }
+    @objc func handleFacebook(sender: UIButton) {
+        
+    }
+    @objc func handleTwitter(sender: UIButton) {
+        
+    }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if(mode == "rss") {
             let cell = tableView.dequeueReusableCell(withIdentifier: "rssCell", for: indexPath) as! AddSourceTableViewCell
+            cell.thumbnailImg.image = UIImage(named: "page icon disabled")
             cell.instagramBtn.isHidden = true
             cell.twitterBtn.isHidden = true
+            cell.facebookBtn.isHidden = true
+            cell.redditBtn.isHidden = true
+            cell.searchImage.isHidden = true
             cell.btn.tag = indexPath.row
             cell.btn.isHidden = false
             if(loadDefaults) {
@@ -91,7 +110,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                     cell.lbl?.text = rssSorted[indexPath.row][0]
                     cell.btn.removeTarget(nil, action: nil, for: .allEvents)
                     cell.btn.addTarget(self, action: #selector(handleAdd(sender:)), for: .touchUpInside)
-                    print("\(defaults.joined()) -> \(rssSorted[indexPath.row][0]) (\(indexPath.row)")
+//                    print("\(defaults.joined()) -> \(rssSorted[indexPath.row][0]) (\(indexPath.row)")
                     if(defaults.joined().contains(rssSorted[indexPath.row][0])) {
                         cell.btn.setBackgroundImage(UIImage(named: "ic_remove_circle_48pt_3x"), for: .normal)
                         cell.btn.removeTarget(nil, action: nil, for: .allEvents)
@@ -120,13 +139,27 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
         if(indexPath.row == 0) {
             cell.instagramBtn.isHidden = false
             cell.twitterBtn.isHidden = false
+            cell.facebookBtn.isHidden = false
+            cell.redditBtn.isHidden = false
+            cell.searchImage.isHidden = false
+            cell.thumbnailImg.isHidden = true
             cell.lbl.text = ""
             cell.btn.isHidden = true
         } else {
             cell.instagramBtn.isHidden = true
             cell.twitterBtn.isHidden = true
-            cell.lbl?.text = socialMediaData[indexPath.row - 1]
-            cell.btn.setBackgroundImage(UIImage(named: "ic_remove_circle_48pt_3x"), for: .normal)
+            cell.facebookBtn.isHidden = true
+            cell.redditBtn.isHidden = true
+            cell.searchImage.isHidden = true
+            cell.thumbnailImg.isHidden = false
+            cell.thumbnailImg.image = UIImage(named: "\(getBtnState()) icon disabled")
+            cell.lbl?.text = socialMediaSort[indexPath.row - 1]
+            print(socialMediaSort[indexPath.row - 1])
+            if(loadDefaults) {
+                cell.btn.setBackgroundImage(UIImage(named: "ic_remove_circle_48pt_3x"), for: .normal)
+            } else {
+                cell.btn.setBackgroundImage(UIImage(named: "add_btn"), for: .normal)
+            }
             cell.btn.isHidden = false
         }
         
@@ -137,27 +170,74 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
         
         return cell
     }
+    
+    func getBtnState() -> String {
+            return UserDefaults.standard.string(forKey: "_tmp_social-btn-state")!
+    }
+    
     @objc func textFieldDidChange(textField: UITextField) {
-        if(textField.text == "") {
-            loadDefaults = true
-            rssTable.frame.size.height = getTableSizeForRSS()
-            rssTable.reloadData()
-            needsReload = true
+        if(mode == "rss") {
+            if(textField.text == "") {
+                loadDefaults = true
+                rssTable.frame.size.height = getTableSizeForRSS()
+                rssTable.reloadData()
+                needsReload = true
+            } else {
+                rssSorted = []
+                loadDefaults = false
+                for t in rssData {
+                    if(t[0].lowercased().range(of: textField.text!.lowercased()) != nil) {
+                        rssSorted.append(t)
+                    }
+                }
+                if (rssSorted.count == 0) {
+                    rssSorted = [["Couldn't find anything ;(", "nourl"]]
+                }
+                
+                rssTable.frame.size.height = getTableSizeForRSS()
+                rssTable.reloadData()
+                needsReload = true
+            }
         } else {
-            rssSorted = []
-            loadDefaults = false
-            for t in rssData {
-                if(t[0].lowercased().range(of: textField.text!.lowercased()) != nil) {
-                    rssSorted.append(t)
+//            print("socialmedia search \(UserDefaults.standard.string(forKey: "_tmp_social-btn-state"))")
+            if(textField.text == "") {
+                loadDefaults = true
+                self.rssTable.frame.size.height = self.getTableSizeForSocialMedia()
+            } else {
+                loadDefaults = false
+                switch UserDefaults.standard.string(forKey: "_tmp_social-btn-state")! {
+                    case "instagram":
+                        print("Searching Instagram...")
+                    case "reddit":
+                        print("Searching Reddit...")
+                        print(textField.text!)
+                        Alamofire.request("https://bamboo-us.com/ProjectFeed/service_reddit.php?q=\(textField.text!)").validate().responseJSON { response in
+                            switch response.result {
+                                case .failure(let err):
+                                    print("Data Error: \(err.localizedDescription)")
+                                    break
+                                case .success:
+                                    print("Searching...")
+                                    if let data = response.result.value as? [String] {
+                                        print("Data Success")
+                                        self.socialMediaSort = data
+                                        DispatchQueue.main.async {
+                                            self.rssTable.reloadData()
+                                            self.rssTable.frame.size.height = self.getTableSizeForSocialMedia()
+                                        }
+                                    }
+                                    break
+                            }
+                        }
+                    
+                    case "twitter":
+                        print("Searching Twitter...")
+                    case "facebook":
+                        print("Searching Facebook...")
+                default:
+                    print("Error: Button State is invalid (SetupSourcesViewController 195 : 17)")
                 }
             }
-            if (rssSorted.count == 0) {
-                rssSorted = [["Couldn't find anything ;(", "nourl"]]
-            }
-            
-            rssTable.frame.size.height = getTableSizeForRSS()
-            rssTable.reloadData()
-            needsReload = true
         }
     }
     
@@ -168,7 +248,8 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
         
         // Social Media View
         print(socialMediaData.count + 1)
-        return loadDefaults ? socialMediaData.count + 1 : 0
+        print("Size: \(loadDefaults ? socialMediaData.count + 1 : 0)")
+        return loadDefaults ? socialMediaData.count + 1 : socialMediaSort.count + 1
     }
     
     override func viewDidLoad() {
@@ -177,6 +258,8 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
         rssTable.dataSource = self
         rssTable.delegate = self
         backBtn.isHidden = true
+        
+        UserDefaults.standard.set("instagram", forKey: "_tmp_social-btn-state")
         Alamofire.request("https://bamboo-us.com/ProjectFeed/feed_db.php").responseJSON{ response in
             print("Request")
             if let array = response.result.value as? [NSArray] {
@@ -208,7 +291,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
     
     func getTableSizeForSocialMedia() -> CGFloat {
         if(!loadDefaults) {
-            let r1 = CGFloat((self.socialMediaData.count + 1) * tableHeight)
+            let r1 = CGFloat((self.socialMediaSort.count + 1) * tableHeight)
             let r2 = self.view.frame.height - self.addSourcesTopView.frame.height
             
             if r1 < r2 { return r1}

@@ -365,34 +365,68 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Couldn't find anything ;(" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CYS-3x-Gx2">
-                                                    <rect key="frame" x="15" y="11" width="256" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Couldn't find anything ;(" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CYS-3x-Gx2">
+                                                    <rect key="frame" x="50" y="11" width="221" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lI4-mm-Z40">
-                                                    <rect key="frame" x="279" y="9" width="25" height="25"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <rect key="frame" x="280" y="8" width="23" height="25"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MGa-Wn-PQe">
-                                                    <rect key="frame" x="23" y="6" width="30" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <state key="normal" title="I"/>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MGa-Wn-PQe">
+                                                    <rect key="frame" x="14" y="6" width="24" height="26"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                                    <state key="normal" image="instagram icon enabled"/>
+                                                    <connections>
+                                                        <action selector="instagramPressed:" destination="yt7-nr-Vpt" eventType="touchUpInside" id="34l-HY-mnA"/>
+                                                    </connections>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d1m-Aq-tg5">
-                                                    <rect key="frame" x="69" y="6" width="30" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <state key="normal" title="I"/>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d1m-Aq-tg5">
+                                                    <rect key="frame" x="47" y="6" width="30" height="26"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                                    <state key="normal" image="facebook icon disabled"/>
+                                                    <connections>
+                                                        <action selector="facebookPressed:" destination="yt7-nr-Vpt" eventType="touchUpInside" id="NPr-TT-ppn"/>
+                                                    </connections>
                                                 </button>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J3s-G6-b0a">
+                                                    <rect key="frame" x="84" y="10" width="25" height="22"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                                    <state key="normal" image="twitter icon disabled"/>
+                                                    <connections>
+                                                        <action selector="twitterPressed:" destination="yt7-nr-Vpt" eventType="touchUpInside" id="Ahf-RX-nWn"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wPQ-1r-P5h">
+                                                    <rect key="frame" x="116" y="6" width="18" height="26"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                                    <state key="normal" image="reddit icon disabled"/>
+                                                    <connections>
+                                                        <action selector="redditPressed:" destination="yt7-nr-Vpt" eventType="touchUpInside" id="ZdD-b2-gW3"/>
+                                                    </connections>
+                                                </button>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="select network label" translatesAutoresizingMaskIntoConstraints="NO" id="3Dr-Sk-Ipb">
+                                                    <rect key="frame" x="149" y="11" width="171" height="19"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MAz-fR-Prh">
+                                                    <rect key="frame" x="14" y="6" width="25" height="25"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="btn" destination="lI4-mm-Z40" id="qQA-mA-tiR"/>
+                                            <outlet property="facebookBtn" destination="d1m-Aq-tg5" id="XAp-tv-HHv"/>
                                             <outlet property="instagramBtn" destination="MGa-Wn-PQe" id="5SS-ga-EL3"/>
                                             <outlet property="lbl" destination="CYS-3x-Gx2" id="KDP-jz-7EB"/>
-                                            <outlet property="twitterBtn" destination="d1m-Aq-tg5" id="byU-nw-N3V"/>
+                                            <outlet property="redditBtn" destination="wPQ-1r-P5h" id="yPP-zZ-FH3"/>
+                                            <outlet property="searchImage" destination="3Dr-Sk-Ipb" id="SnU-SS-G4e"/>
+                                            <outlet property="thumbnailImg" destination="MAz-fR-Prh" id="jkK-8v-bD9"/>
+                                            <outlet property="twitterBtn" destination="J3s-G6-b0a" id="fBE-Bt-hGN"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -428,9 +462,14 @@
         <image name="SignInBtn" width="202" height="40"/>
         <image name="SignUpBtn" width="202" height="40"/>
         <image name="UsernameEmail Field" width="317" height="50"/>
+        <image name="facebook icon disabled" width="25" height="25"/>
         <image name="funnelBG" width="1125" height="2001"/>
         <image name="ic_arrow_back_white_48pt_3x" width="17" height="17"/>
         <image name="ic_arrow_forward_48pt_3x" width="17" height="17"/>
+        <image name="instagram icon enabled" width="25" height="25"/>
+        <image name="reddit icon disabled" width="18" height="25"/>
+        <image name="select network label" width="205" height="25"/>
+        <image name="twitter icon disabled" width="25" height="21"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="g5r-9r-uet"/>
