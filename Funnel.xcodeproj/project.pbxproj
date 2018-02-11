@@ -13,6 +13,10 @@
 		976B065320264D1A00F04F71 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 976B065120264D0E00F04F71 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		976B0656202650CA00F04F71 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976B0655202650CA00F04F71 /* MainViewController.swift */; };
 		976B06582026E56000F04F71 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 976B06572026E56000F04F71 /* Images.xcassets */; };
+		9770A8CB203002EA0035C159 /* TwitterShareExtensionUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9770A8C9203002EA0035C159 /* TwitterShareExtensionUI.framework */; };
+		9770A8CC203002EA0035C159 /* TwitterShareExtensionUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9770A8C9203002EA0035C159 /* TwitterShareExtensionUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9770A8CD203002EA0035C159 /* TwitterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9770A8CA203002EA0035C159 /* TwitterKit.framework */; };
+		9770A8CE203002EA0035C159 /* TwitterKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9770A8CA203002EA0035C159 /* TwitterKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		97AADC1B2024263C00D08481 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97AADC1A2024263C00D08481 /* AppDelegate.swift */; };
 		97AADC1D2024263C00D08481 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97AADC1C2024263C00D08481 /* ViewController.swift */; };
 		97AADC202024263C00D08481 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97AADC1E2024263C00D08481 /* Main.storyboard */; };
@@ -46,7 +50,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				9770A8CC203002EA0035C159 /* TwitterShareExtensionUI.framework in Embed Frameworks */,
 				976B065320264D1A00F04F71 /* Alamofire.framework in Embed Frameworks */,
+				9770A8CE203002EA0035C159 /* TwitterKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -59,6 +65,8 @@
 		976B065120264D0E00F04F71 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Alamofire.framework; sourceTree = "<group>"; };
 		976B0655202650CA00F04F71 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		976B06572026E56000F04F71 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		9770A8C9203002EA0035C159 /* TwitterShareExtensionUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TwitterShareExtensionUI.framework; path = Carthage/Build/iOS/TwitterShareExtensionUI.framework; sourceTree = "<group>"; };
+		9770A8CA203002EA0035C159 /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TwitterKit.framework; path = Carthage/Build/iOS/TwitterKit.framework; sourceTree = "<group>"; };
 		97AADC172024263C00D08481 /* Funnel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Funnel.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		97AADC1A2024263C00D08481 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		97AADC1C2024263C00D08481 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -79,7 +87,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9770A8CB203002EA0035C159 /* TwitterShareExtensionUI.framework in Frameworks */,
 				976B065220264D1A00F04F71 /* Alamofire.framework in Frameworks */,
+				9770A8CD203002EA0035C159 /* TwitterKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -103,6 +113,8 @@
 		97AADC0E2024263C00D08481 = {
 			isa = PBXGroup;
 			children = (
+				9770A8CA203002EA0035C159 /* TwitterKit.framework */,
+				9770A8C9203002EA0035C159 /* TwitterShareExtensionUI.framework */,
 				976B065120264D0E00F04F71 /* Alamofire.framework */,
 				97AADC192024263C00D08481 /* Funnel */,
 				97AADC2E2024263C00D08481 /* FunnelTests */,
@@ -467,6 +479,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = Funnel/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -486,6 +499,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = Funnel/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

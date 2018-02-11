@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import TwitterKit
 
 class AddSourceTableViewCell: UITableViewCell {
 
@@ -59,6 +60,15 @@ class AddSourceTableViewCell: UITableViewCell {
         disableAllBtns()
         twitterBtn.setImage(UIImage(named: "twitter icon enabled"), for: .normal)
         ud.set("twitter", forKey: "_tmp_social-btn-state")
+        if(TWTRTwitter.sharedInstance().sessionStore.session()?.authToken == nil) {
+            TWTRTwitter.sharedInstance().logIn(completion: { (session, error) in
+                if (session != nil) {
+                    TWTRTwitter.sharedInstance().sessionStore.save(session!, completion: {_,_ in })
+                } else {
+                    print("An Error Occurred!")
+                }
+            })
+        }
     }
     @IBAction func redditPressed(_ sender: Any) {
         disableAllBtns()

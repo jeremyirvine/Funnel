@@ -7,15 +7,19 @@
 //
 
 import UIKit
+import TwitterKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        return TWTRTwitter.sharedInstance().application(app, open: url, options: options)
+    }
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        TWTRTwitter.sharedInstance().start(withConsumerKey:"FUNuuHn0EJrbxqtx5MnwfTpRB", consumerSecret:"5zdkfRbmFtJbf07iwmV27gQvV0maKPU9OE5Pn7cAdOnfApTTDx")
         return true
     }
 

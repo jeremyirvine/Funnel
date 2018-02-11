@@ -10,6 +10,7 @@
 
 import UIKit
 import Alamofire
+import TwitterKit
 
 class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var titleLbl: UILabel!
@@ -99,6 +100,11 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
     }
     @objc func handleTwitter(sender: UIButton) {
         
+    }
+    @IBAction func resetBtnPressed(_ sender: Any) {
+        if let user = TWTRTwitter.sharedInstance().sessionStore.session() {
+            TWTRTwitter.sharedInstance().sessionStore.logOutUserID(user.userID)
+        }
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if(mode == "rss") {
@@ -252,6 +258,47 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                     
                     case "twitter":
                         print("Searching Twitter...")
+                        if let userID = TWTRTwitter.sharedInstance().sessionStore.session()?.userID {
+                            let client = TWTRAPIClient(userID: userID)
+                            // make requests with client
+                            let statusesShowEndpoint = "https://api.twitter.com/1.1/users/search.json"
+                            let params = ["q": textField.text!]
+                            var clientError : NSError?
+                            
+                            let request = client.urlRequest(withMethod: "GET", urlString: statusesShowEndpoint, parameters: params, error: &clientError)
+                            
+                            client.sendTwitterRequest(request) { (response, data, connectionError) -> Void in
+                                if connectionError != nil {
+                                    print("Error: \(connectionError)")
+                                }
+                                
+                                do {
+                                    let json = try JSONSerialization.jsonObject(with: data!, options: []) as! [Any]
+                                    print("-- data --")
+                                    if(json.count - 1 > 0) {
+                                        self.socialMediaSort = []
+                                        for index in 0...json.count - 1 {
+                                            let indexed = json[index] as! [String: Any]
+                                            
+                                            print("\(indexed["screen_name"])")
+                                            self.socialMediaSort.append(indexed["screen_name"] as! String)
+                                        }
+                                    } else if(json.count == 1) {
+                                        let indexed = json[0] as! [String: Any]
+                                        
+//                                        print("\(indexed["screen_name"])")
+                                        self.socialMediaSort = [indexed["screen_name"] as! String];
+                                        
+                                    }
+                                    DispatchQueue.main.async {
+                                        self.rssTable.reloadData()
+                                        self.rssTable.frame.size.height = self.getTableSizeForSocialMedia()
+                                    }
+                                } catch let jsonError as NSError {
+                                    print("json error: \(jsonError.localizedDescription)")
+                                }
+                            }
+                    }
                     case "facebook":
                         print("Searching Facebook...")
                 default:
