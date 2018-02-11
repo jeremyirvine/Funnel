@@ -57,6 +57,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
     }
     
     @objc func handleRemove(sender: UIButton) {
+        print("Removing")
             print("Removing \"\(self.defaults[sender.tag][0])\"")
             defaults.remove(at: sender.tag)
             DispatchQueue.main.async {
@@ -68,12 +69,23 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
     
     
     @objc func handleAdd(sender: UIButton) {
+        print("Adding...")
+        if(mode == "rss") {
             print("Adding \"\(self.rssSorted[sender.tag][0])\"...")
             defaults.append(self.rssSorted[sender.tag])
             sender.titleLabel?.text = ""
             DispatchQueue.main.async {
                     self.rssTable.reloadData()
             }
+        } else {
+            print("Adding \"\(self.socialMediaSort[sender.tag])\"...")
+            print(self.socialMediaSort)
+            socialMediaData.append([socialMediaSort[sender.tag], getBtnState()])
+            sender.titleLabel?.text = ""
+            DispatchQueue.main.async {
+                self.rssTable.reloadData()
+            }
+        }
     }
     
     @objc func handleInstagram(sender: UIButton) {
@@ -135,7 +147,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
         
         // Social Media View
         let cell = tableView.dequeueReusableCell(withIdentifier: "rssCell", for: indexPath) as! AddSourceTableViewCell
-        cell.btn.removeTarget(nil, action: nil, for: .allEvents)
+            cell.btn.removeTarget(nil, action: nil, for: .allEvents)
         if(indexPath.row == 0) {
             cell.instagramBtn.isHidden = false
             cell.twitterBtn.isHidden = false
@@ -145,6 +157,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
             cell.thumbnailImg.isHidden = true
             cell.lbl.text = ""
             cell.btn.isHidden = true
+            cell.btn.addTarget(self, action: #selector(handleRemove(sender:)), for: .touchUpInside)
         } else {
             cell.instagramBtn.isHidden = true
             cell.twitterBtn.isHidden = true
@@ -152,13 +165,19 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
             cell.redditBtn.isHidden = true
             cell.searchImage.isHidden = true
             cell.thumbnailImg.isHidden = false
-            cell.thumbnailImg.image = UIImage(named: "\(getBtnState()) icon disabled")
-            cell.lbl?.text = socialMediaSort[indexPath.row - 1]
-            print(socialMediaSort[indexPath.row - 1])
+            cell.btn.addTarget(self, action: #selector(handleAdd(sender:)), for: .touchUpInside)
+            
+            cell.btn.tag = indexPath.row - 1
             if(loadDefaults) {
+                
+                cell.thumbnailImg.image = UIImage(named: "\(socialMediaData[indexPath.row - 1][1]) icon disabled")
                 cell.btn.setBackgroundImage(UIImage(named: "ic_remove_circle_48pt_3x"), for: .normal)
+                cell.lbl?.text = socialMediaData[indexPath.row - 1][0]
             } else {
+                
+                cell.thumbnailImg.image = UIImage(named: "\(getBtnState()) icon disabled")
                 cell.btn.setBackgroundImage(UIImage(named: "add_btn"), for: .normal)
+                cell.lbl?.text = socialMediaSort[indexPath.row - 1]
             }
             cell.btn.isHidden = false
         }
@@ -203,6 +222,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
             if(textField.text == "") {
                 loadDefaults = true
                 self.rssTable.frame.size.height = self.getTableSizeForSocialMedia()
+                self.rssTable.reloadData()
             } else {
                 loadDefaults = false
                 switch UserDefaults.standard.string(forKey: "_tmp_social-btn-state")! {
