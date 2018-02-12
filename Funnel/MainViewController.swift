@@ -13,8 +13,10 @@ class MainViewController: UIViewController {
     @IBAction func resetDefaultsPressed(_ sender: Any) {
         UserDefaults.standard.removeObject(forKey: "login_key")
         UserDefaults.standard.removeObject(forKey: "login_username")
+        UserDefaults.standard.removeObject(forKey: "social_media")
+        UserDefaults.standard.removeObject(forKey: "rss")
         UserDefaults.standard.synchronize()
-        var uac = UIAlertController(title: "Debug", message: "NSUserDefaults Keys and Usernames Cleared!", preferredStyle: .alert)
+        let uac = UIAlertController(title: "Debug", message: "NSUserDefaults Cleared!", preferredStyle: .alert)
         self.present(uac, animated: true, completion: nil)
     }
     @IBOutlet weak var backgroundView: UIImageView!

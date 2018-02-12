@@ -11,6 +11,8 @@
 import UIKit
 import Alamofire
 import TwitterKit
+import SwiftyJSON
+
 
 class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var titleLbl: UILabel!
@@ -32,17 +34,74 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
     var mode = "rss"
     var socialMediaMode = "instagram"
     
+    func alert(msg: String, title: String) {
+        let refreshAlert = UIAlertController(title: title, message: msg, preferredStyle: UIAlertControllerStyle.alert)
+        
+        refreshAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction!) in
+            self.dismiss(animated: true, completion: nil)
+        }))
+        
+        present(refreshAlert, animated: true, completion: nil)
+    }
+    
+    func displayLoading() -> UIAlertController {
+        let pending = UIAlertController(title: "Saving Settings...", message: nil, preferredStyle: .alert)
+        let indicator = UIActivityIndicatorView(frame: pending.view.bounds)
+        indicator.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        pending.view.addSubview(indicator)
+        indicator.isUserInteractionEnabled = false
+        indicator.startAnimating()
+        
+        self.present(pending, animated: true, completion: nil)
+        
+        return pending
+    }
+    
     @IBAction func forwardBtnPressed(_ sender: Any) {
-        mode = "socialmedia"
-        self.backBtn.isHidden = false
-        self.titleLbl.text = "Add Social Media Sources"
-        DispatchQueue.main.async {
-            print("SetSize:", self.getTableSizeForSocialMedia())
-            self.rssTable.frame.size.height = self.getTableSizeForSocialMedia()
-            self.rssTable.reloadData()
+        if(mode == "rss") {
+            mode = "socialmedia"
+            self.backBtn.isHidden = false
+            self.titleLbl.text = "Add Social Media Sources"
+            DispatchQueue.main.async {
+                print("SetSize:", self.getTableSizeForSocialMedia())
+                self.rssTable.frame.size.height = self.getTableSizeForSocialMedia()
+                self.rssTable.reloadData()
+            }
+            loadDefaults = true
+            self.searchRssField.text = ""
+        } else {
+            print("Saving Data...\n \(defaults)")
+            let btn = sender as! UIButton
+            btn.isEnabled = false
+//            let t = displayLoading()
+            if let socialData = try? JSONSerialization.data(withJSONObject: socialMediaData, options: JSONSerialization.WritingOptions(rawValue: 0)) {
+                if let rssData = try? JSONSerialization.data(withJSONObject: defaults, options: JSONSerialization.WritingOptions(rawValue: 0)) {
+                    let social = String(data: socialData, encoding: .utf8)?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+                    let rss = String(data: rssData, encoding: .utf8)?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+                    let ud = UserDefaults.standard
+                    Alamofire.request("https://bamboo-us.com/ProjectFeed/services.php?q=post_rss-social&rss=\(rss!)&social=\(social!)&u=\(ud.string(forKey: "login_username")!)&nonce=\(ud.string(forKey: "login_key")!)").validate().responseJSON { response in
+                        switch response.result {
+                            case .failure(let err):
+                                print(err)
+                                break
+                            case .success:
+                                if let data = response.result.value as? [String: String] {
+                                    if(data["status"] == "success") {
+                                        ud.set(1, forKey:"setup_complete")
+                                        self.performSegue(withIdentifier: "setupToMain", sender: self)
+//                                        t.dismiss(animated: true, completion: nil)
+                                    } else {
+                                        self.alert(msg: "Error", title: "An error occured while trying to submit your data... (ERROR_CODE = \(data["status"]?.uppercased())")
+                                        btn.isEnabled = true
+//                                        t.dismiss(animated: true, completion: nil)
+                                    }
+                                }
+                                break
+                        }
+                    }
+                }
+            }
         }
-        loadDefaults = true
-        self.searchRssField.text = ""
     }
     
     @IBAction func backBtnPressed(_ sender: Any) {
@@ -59,6 +118,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
     
     @objc func handleRemove(sender: UIButton) {
         print("Removing")
+        if(mode == "rss") {
             print("Removing \"\(self.defaults[sender.tag][0])\"")
             defaults.remove(at: sender.tag)
             DispatchQueue.main.async {
@@ -66,6 +126,15 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                 self.rssTable.frame.size.height = self.getTableSizeForRSS()
                 self.needsReload = true
             }
+        } else {
+            print("Removing \"\(self.socialMediaData[sender.tag][0])\"")
+            socialMediaData.remove(at: sender.tag)
+            DispatchQueue.main.async {
+                self.rssTable.reloadData()
+                self.rssTable.frame.size.height = self.getTableSizeForSocialMedia()
+                self.needsReload = true
+            }
+        }
     }
     
     
@@ -83,6 +152,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
             print(self.socialMediaSort)
             socialMediaData.append([socialMediaSort[sender.tag], getBtnState()])
             sender.titleLabel?.text = ""
+            sender.setImage(UIImage(named:"ic_remove_circle_48pt_3x"), for: .normal)
             DispatchQueue.main.async {
                 self.rssTable.reloadData()
             }
@@ -163,6 +233,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
             cell.thumbnailImg.isHidden = true
             cell.lbl.text = ""
             cell.btn.isHidden = true
+            cell.btn.removeTarget(nil, action: nil, for: .allEvents)
             cell.btn.addTarget(self, action: #selector(handleRemove(sender:)), for: .touchUpInside)
         } else {
             cell.instagramBtn.isHidden = true
@@ -171,6 +242,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
             cell.redditBtn.isHidden = true
             cell.searchImage.isHidden = true
             cell.thumbnailImg.isHidden = false
+            cell.btn.removeTarget(nil, action: nil, for: .allEvents)
             cell.btn.addTarget(self, action: #selector(handleAdd(sender:)), for: .touchUpInside)
             
             cell.btn.tag = indexPath.row - 1
@@ -178,11 +250,21 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                 
                 cell.thumbnailImg.image = UIImage(named: "\(socialMediaData[indexPath.row - 1][1]) icon disabled")
                 cell.btn.setBackgroundImage(UIImage(named: "ic_remove_circle_48pt_3x"), for: .normal)
+                cell.btn.removeTarget(nil, action: nil, for: .allEvents)
+                cell.btn.addTarget(self, action: #selector(handleRemove(sender:)), for: .touchUpInside)
                 cell.lbl?.text = socialMediaData[indexPath.row - 1][0]
             } else {
-                
+                if(socialMediaData.joined().contains(socialMediaSort[indexPath.row - 1])) {
+                    cell.btn.setBackgroundImage(UIImage(named: "ic_remove_circle_48pt_3x"), for: .normal)
+                    cell.btn.removeTarget(nil, action: nil, for: .allEvents)
+                    cell.btn.addTarget(self, action: #selector(handleRemove(sender:)), for: .touchUpInside)
+                } else {
+                    
+                    cell.btn.setBackgroundImage(UIImage(named: "add_btn"), for: .normal)
+                    cell.btn.removeTarget(nil, action: nil, for: .allEvents)
+                    cell.btn.addTarget(self, action: #selector(handleAdd(sender:)), for: .touchUpInside)
+                }
                 cell.thumbnailImg.image = UIImage(named: "\(getBtnState()) icon disabled")
-                cell.btn.setBackgroundImage(UIImage(named: "add_btn"), for: .normal)
                 cell.lbl?.text = socialMediaSort[indexPath.row - 1]
             }
             cell.btn.isHidden = false
@@ -269,7 +351,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                             
                             client.sendTwitterRequest(request) { (response, data, connectionError) -> Void in
                                 if connectionError != nil {
-                                    print("Error: \(connectionError)")
+                                    print("Error: \(String(describing: connectionError))")
                                 }
                                 
                                 do {
@@ -280,7 +362,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                                         for index in 0...json.count - 1 {
                                             let indexed = json[index] as! [String: Any]
                                             
-                                            print("\(indexed["screen_name"])")
+                                            print("\(String(describing: indexed["screen_name"]))")
                                             self.socialMediaSort.append(indexed["screen_name"] as! String)
                                         }
                                     } else if(json.count == 1) {

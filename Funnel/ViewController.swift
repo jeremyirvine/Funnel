@@ -78,6 +78,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                         print(status)
                         if(status == "success") {
                             print("Insta Key: \(JSON["instaKey"])")
+                            print("Setup Complete: \(JSON["setup_complete"])")	
                             UserDefaults.standard.set(JSON["setup_complete"], forKey: "setup_complete")
                             UserDefaults.standard.set(JSON["key"], forKey: "login_key")
                             UserDefaults.standard.set(username, forKey: "login_username")

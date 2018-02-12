@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		970ED75220311898009C8C13 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 970ED75120311897009C8C13 /* SwiftyJSON.framework */; };
+		970ED75320311898009C8C13 /* SwiftyJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 970ED75120311897009C8C13 /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		976B064A202570C200F04F71 /* SetupSourcesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976B0649202570C200F04F71 /* SetupSourcesViewController.swift */; };
 		976B064E202577F500F04F71 /* FadeSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976B064D202577F500F04F71 /* FadeSegue.swift */; };
 		976B065220264D1A00F04F71 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 976B065120264D0E00F04F71 /* Alamofire.framework */; };
@@ -50,6 +52,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				970ED75320311898009C8C13 /* SwiftyJSON.framework in Embed Frameworks */,
 				9770A8CC203002EA0035C159 /* TwitterShareExtensionUI.framework in Embed Frameworks */,
 				976B065320264D1A00F04F71 /* Alamofire.framework in Embed Frameworks */,
 				9770A8CE203002EA0035C159 /* TwitterKit.framework in Embed Frameworks */,
@@ -60,6 +63,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		970ED75120311897009C8C13 /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/iOS/SwiftyJSON.framework; sourceTree = "<group>"; };
 		976B0649202570C200F04F71 /* SetupSourcesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupSourcesViewController.swift; sourceTree = "<group>"; };
 		976B064D202577F500F04F71 /* FadeSegue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeSegue.swift; sourceTree = "<group>"; };
 		976B065120264D0E00F04F71 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Alamofire.framework; sourceTree = "<group>"; };
@@ -87,6 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				970ED75220311898009C8C13 /* SwiftyJSON.framework in Frameworks */,
 				9770A8CB203002EA0035C159 /* TwitterShareExtensionUI.framework in Frameworks */,
 				976B065220264D1A00F04F71 /* Alamofire.framework in Frameworks */,
 				9770A8CD203002EA0035C159 /* TwitterKit.framework in Frameworks */,
@@ -113,6 +118,7 @@
 		97AADC0E2024263C00D08481 = {
 			isa = PBXGroup;
 			children = (
+				970ED75120311897009C8C13 /* SwiftyJSON.framework */,
 				9770A8CA203002EA0035C159 /* TwitterKit.framework */,
 				9770A8C9203002EA0035C159 /* TwitterShareExtensionUI.framework */,
 				976B065120264D0E00F04F71 /* Alamofire.framework */,
