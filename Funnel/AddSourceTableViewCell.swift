@@ -23,27 +23,35 @@ class AddSourceTableViewCell: UITableViewCell {
     var buttonSel = "instagram"
     var ud = UserDefaults.standard
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
+    func refreshButtons() {
         switch UserDefaults.standard.string(forKey: "_tmp_social-btn-state")! {
         case "instagram":
             disableAllBtns()
             instagramBtn.setImage(UIImage(named: "instagram icon enabled"), for: .normal)
+            print("Instagram Enabled")
         case "reddit":
             disableAllBtns()
             redditBtn.setImage(UIImage(named: "reddit icon enabled"), for: .normal)
+            print("Reddit Enabled")
         case "twitter":
             disableAllBtns()
             twitterBtn.setImage(UIImage(named: "twitter icon enabled"), for: .normal)
+            print("Twitter Enabled")
         case "facebook":
             disableAllBtns()
-            twitterBtn.setImage(UIImage(named: "facebook icon enabled"), for: .normal)
+            facebookBtn.setImage(UIImage(named: "facebook icon enabled"), for: .normal)
+            print("Facebook Enabled")
         default:
             print("Error: Button type is invalid (AddSourceTableViewCell 41:14)")
             disableAllBtns()
             instagramBtn.setImage(UIImage(named: "instagram icon enabled"), for: .normal)
         }
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        refreshButtons()
     }
     @IBAction func instagramPressed(_ sender: Any) {
         disableAllBtns()
@@ -84,7 +92,7 @@ class AddSourceTableViewCell: UITableViewCell {
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
+        super.setSelected(false, animated: animated)
 
         // Configure the view for the selected state
     }

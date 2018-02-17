@@ -27,12 +27,13 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
     var rssSorted: [[String]] = [[]]
     var socialMediaData: [[String]] = []
     var socialMediaSort: [String] = []
+    var specialIDList: [String] = []
     
     var needsReload = true
     var loadDefaults = true
-    
     var mode = "rss"
     var socialMediaMode = "instagram"
+    let fb_access_token = "1885818195082007|ml3-08MDaLy3ZfUqUh4THDg99Wo".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
     
     func alert(msg: String, title: String) {
         let refreshAlert = UIAlertController(title: title, message: msg, preferredStyle: UIAlertControllerStyle.alert)
@@ -73,7 +74,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
             print("Saving Data...\n \(defaults)")
             let btn = sender as! UIButton
             btn.isEnabled = false
-//            let t = displayLoading()
+            //            let t = displayLoading()
             if let socialData = try? JSONSerialization.data(withJSONObject: socialMediaData, options: JSONSerialization.WritingOptions(rawValue: 0)) {
                 if let rssData = try? JSONSerialization.data(withJSONObject: defaults, options: JSONSerialization.WritingOptions(rawValue: 0)) {
                     let social = String(data: socialData, encoding: .utf8)?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
@@ -81,22 +82,22 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                     let ud = UserDefaults.standard
                     Alamofire.request("https://bamboo-us.com/ProjectFeed/services.php?q=post_rss-social&rss=\(rss!)&social=\(social!)&u=\(ud.string(forKey: "login_username")!)&nonce=\(ud.string(forKey: "login_key")!)").validate().responseJSON { response in
                         switch response.result {
-                            case .failure(let err):
-                                print(err)
-                                break
-                            case .success:
-                                if let data = response.result.value as? [String: String] {
-                                    if(data["status"] == "success") {
-                                        ud.set(1, forKey:"setup_complete")
-                                        self.performSegue(withIdentifier: "setupToMain", sender: self)
-//                                        t.dismiss(animated: true, completion: nil)
-                                    } else {
-                                        self.alert(msg: "Error", title: "An error occured while trying to submit your data... (ERROR_CODE = \(data["status"]?.uppercased())")
-                                        btn.isEnabled = true
-//                                        t.dismiss(animated: true, completion: nil)
-                                    }
+                        case .failure(let err):
+                            print(err)
+                            break
+                        case .success:
+                            if let data = response.result.value as? [String: String] {
+                                if(data["status"] == "success") {
+                                    ud.set(1, forKey:"setup_complete")
+                                    self.performSegue(withIdentifier: "setupToMain", sender: self)
+                                    //                                        t.dismiss(animated: true, completion: nil)
+                                } else {
+                                    self.alert(msg: "Error", title: "An error occured while trying to submit your data... (ERROR_CODE = \(data["status"]?.uppercased())")
+                                    btn.isEnabled = true
+                                    //                                        t.dismiss(animated: true, completion: nil)
                                 }
-                                break
+                            }
+                            break
                         }
                     }
                 }
@@ -145,12 +146,16 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
             defaults.append(self.rssSorted[sender.tag])
             sender.titleLabel?.text = ""
             DispatchQueue.main.async {
-                    self.rssTable.reloadData()
+                self.rssTable.reloadData()
             }
         } else {
             print("Adding \"\(self.socialMediaSort[sender.tag])\"...")
             print(self.socialMediaSort)
-            socialMediaData.append([socialMediaSort[sender.tag], getBtnState()])
+            if(getBtnState() != "facebook") {
+                socialMediaData.append([socialMediaSort[sender.tag], getBtnState()])
+            } else {
+                socialMediaData.append([socialMediaSort[sender.tag], getBtnState(), specialIDList[sender.tag]])
+            }
             sender.titleLabel?.text = ""
             sender.setImage(UIImage(named:"ic_remove_circle_48pt_3x"), for: .normal)
             DispatchQueue.main.async {
@@ -191,14 +196,14 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                 cell.lbl?.text = "\(defaults[indexPath.row][0])"
                 cell.btn.removeTarget(nil, action: nil, for: .allEvents)
                 cell.btn.addTarget(self, action: #selector(handleRemove(sender:)), for: .touchUpInside)
-    //            cell.btn.setTitle("Remove", for: .normal)
+                //            cell.btn.setTitle("Remove", for: .normal)
                 cell.btn.setBackgroundImage(UIImage(named: "ic_remove_circle_48pt_3x"), for: .normal)
             } else {
                 if(rssSorted.count != 0 && rssSorted[indexPath.row] != []) {
                     cell.lbl?.text = rssSorted[indexPath.row][0]
                     cell.btn.removeTarget(nil, action: nil, for: .allEvents)
                     cell.btn.addTarget(self, action: #selector(handleAdd(sender:)), for: .touchUpInside)
-//                    print("\(defaults.joined()) -> \(rssSorted[indexPath.row][0]) (\(indexPath.row)")
+                    //                    print("\(defaults.joined()) -> \(rssSorted[indexPath.row][0]) (\(indexPath.row)")
                     if(defaults.joined().contains(rssSorted[indexPath.row][0])) {
                         cell.btn.setBackgroundImage(UIImage(named: "ic_remove_circle_48pt_3x"), for: .normal)
                         cell.btn.removeTarget(nil, action: nil, for: .allEvents)
@@ -212,7 +217,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                     }
                 }
             }
-        
+            
             cell.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 0.82)
             cell.lbl?.backgroundColor = UIColor.clear
             cell.detailTextLabel?.backgroundColor = UIColor.clear
@@ -223,7 +228,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
         
         // Social Media View
         let cell = tableView.dequeueReusableCell(withIdentifier: "rssCell", for: indexPath) as! AddSourceTableViewCell
-            cell.btn.removeTarget(nil, action: nil, for: .allEvents)
+        cell.btn.removeTarget(nil, action: nil, for: .allEvents)
         if(indexPath.row == 0) {
             cell.instagramBtn.isHidden = false
             cell.twitterBtn.isHidden = false
@@ -235,7 +240,9 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
             cell.btn.isHidden = true
             cell.btn.removeTarget(nil, action: nil, for: .allEvents)
             cell.btn.addTarget(self, action: #selector(handleRemove(sender:)), for: .touchUpInside)
+            cell.refreshButtons()
         } else {
+            print("Index 1: ", getBtnState())
             cell.instagramBtn.isHidden = true
             cell.twitterBtn.isHidden = true
             cell.facebookBtn.isHidden = true
@@ -247,22 +254,42 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
             
             cell.btn.tag = indexPath.row - 1
             if(loadDefaults) {
-                
+                print("Debug: 1")
                 cell.thumbnailImg.image = UIImage(named: "\(socialMediaData[indexPath.row - 1][1]) icon disabled")
                 cell.btn.setBackgroundImage(UIImage(named: "ic_remove_circle_48pt_3x"), for: .normal)
                 cell.btn.removeTarget(nil, action: nil, for: .allEvents)
                 cell.btn.addTarget(self, action: #selector(handleRemove(sender:)), for: .touchUpInside)
                 cell.lbl?.text = socialMediaData[indexPath.row - 1][0]
+                
             } else {
-                if(socialMediaData.joined().contains(socialMediaSort[indexPath.row - 1])) {
-                    cell.btn.setBackgroundImage(UIImage(named: "ic_remove_circle_48pt_3x"), for: .normal)
-                    cell.btn.removeTarget(nil, action: nil, for: .allEvents)
-                    cell.btn.addTarget(self, action: #selector(handleRemove(sender:)), for: .touchUpInside)
+                print("Current State: \(getBtnState())")
+                if(getBtnState() != "facebook") {
+                    print(2)
+                    if(socialMediaData.joined().contains(socialMediaSort[indexPath.row - 1])) {
+                        cell.btn.setBackgroundImage(UIImage(named: "ic_remove_circle_48pt_3x"), for: .normal)
+                        cell.btn.removeTarget(nil, action: nil, for: .allEvents)
+                        cell.btn.addTarget(self, action: #selector(handleRemove(sender:)), for: .touchUpInside)
+                    } else {
+                        
+                        cell.btn.setBackgroundImage(UIImage(named: "add_btn"), for: .normal)
+                        cell.btn.removeTarget(nil, action: nil, for: .allEvents)
+                        cell.btn.addTarget(self, action: #selector(handleAdd(sender:)), for: .touchUpInside)
+                    }
                 } else {
-                    
-                    cell.btn.setBackgroundImage(UIImage(named: "add_btn"), for: .normal)
-                    cell.btn.removeTarget(nil, action: nil, for: .allEvents)
-                    cell.btn.addTarget(self, action: #selector(handleAdd(sender:)), for: .touchUpInside)
+                    print(3)
+                    print(specialIDList)
+                    print(socialMediaSort.joined())
+                    if(socialMediaData.joined().contains(specialIDList[indexPath.row - 1])) {
+                        print(4)
+                        cell.btn.setBackgroundImage(UIImage(named: "ic_remove_circle_48pt_3x"), for: .normal)
+                        cell.btn.removeTarget(nil, action: nil, for: .allEvents)
+                        cell.btn.addTarget(self, action: #selector(handleRemove(sender:)), for: .touchUpInside)
+                    } else {
+                        print(5)
+                        cell.btn.setBackgroundImage(UIImage(named: "add_btn"), for: .normal)
+                        cell.btn.removeTarget(nil, action: nil, for: .allEvents)
+                        cell.btn.addTarget(self, action: #selector(handleAdd(sender:)), for: .touchUpInside)
+                    }
                 }
                 cell.thumbnailImg.image = UIImage(named: "\(getBtnState()) icon disabled")
                 cell.lbl?.text = socialMediaSort[indexPath.row - 1]
@@ -274,12 +301,13 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
         cell.lbl?.backgroundColor = UIColor.clear
         cell.detailTextLabel?.backgroundColor = UIColor.clear
         cell.contentView.backgroundColor = UIColor.clear
+        cell.refreshButtons()
         
         return cell
     }
     
     func getBtnState() -> String {
-            return UserDefaults.standard.string(forKey: "_tmp_social-btn-state")!
+        return UserDefaults.standard.string(forKey: "_tmp_social-btn-state")!
     }
     
     @objc func textFieldDidChange(textField: UITextField) {
@@ -306,7 +334,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                 needsReload = true
             }
         } else {
-//            print("socialmedia search \(UserDefaults.standard.string(forKey: "_tmp_social-btn-state"))")
+            //            print("socialmedia search \(UserDefaults.standard.string(forKey: "_tmp_social-btn-state"))")
             if(textField.text == "") {
                 loadDefaults = true
                 self.rssTable.frame.size.height = self.getTableSizeForSocialMedia()
@@ -314,75 +342,96 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
             } else {
                 loadDefaults = false
                 switch UserDefaults.standard.string(forKey: "_tmp_social-btn-state")! {
-                    case "instagram":
-                        print("Searching Instagram...")
-                    case "reddit":
-                        print("Searching Reddit...")
-                        print(textField.text!)
-                        Alamofire.request("https://bamboo-us.com/ProjectFeed/service_reddit.php?q=\(textField.text!)").validate().responseJSON { response in
-                            switch response.result {
-                                case .failure(let err):
-                                    print("Data Error: \(err.localizedDescription)")
-                                    break
-                                case .success:
-                                    print("Searching...")
-                                    if let data = response.result.value as? [String] {
-                                        print("Data Success")
-                                        self.socialMediaSort = data
-                                        DispatchQueue.main.async {
-                                            self.rssTable.reloadData()
-                                            self.rssTable.frame.size.height = self.getTableSizeForSocialMedia()
-                                        }
+                case "instagram":
+                    print("Searching Instagram...")
+                case "reddit":
+                    print("Searching Reddit...")
+                    print(textField.text!)
+                    Alamofire.request("https://bamboo-us.com/ProjectFeed/service_reddit.php?q=\(textField.text!)").validate().responseJSON { response in
+                        switch response.result {
+                        case .failure(let err):
+                            print("Data Error: \(err.localizedDescription)")
+                            break
+                        case .success:
+                            print("Searching...")
+                            if let data = response.result.value as? [String] {
+                                print("Data Success")
+                                self.socialMediaSort = data
+                                DispatchQueue.main.async {
+                                    self.rssTable.reloadData()
+                                    self.rssTable.frame.size.height = self.getTableSizeForSocialMedia()
+                                }
+                            }
+                            break
+                        }
+                    }
+                    
+                case "twitter":
+                    print("Searching Twitter...")
+                    if let userID = TWTRTwitter.sharedInstance().sessionStore.session()?.userID {
+                        let client = TWTRAPIClient(userID: userID)
+                        // make requests with client
+                        let statusesShowEndpoint = "https://api.twitter.com/1.1/users/search.json"
+                        let params = ["q": textField.text!]
+                        var clientError : NSError?
+                        
+                        let request = client.urlRequest(withMethod: "GET", urlString: statusesShowEndpoint, parameters: params, error: &clientError)
+                        
+                        client.sendTwitterRequest(request) { (response, data, connectionError) -> Void in
+                            if connectionError != nil {
+                                print("Error: \(String(describing: connectionError))")
+                            }
+                            
+                            do {
+                                let json = try JSONSerialization.jsonObject(with: data!, options: []) as! [Any]
+                                print("-- data --")
+                                if(json.count - 1 > 0) {
+                                    self.socialMediaSort = []
+                                    for index in 0...json.count - 1 {
+                                        let indexed = json[index] as! [String: Any]
+                                        
+                                        print("\(String(describing: indexed["screen_name"]))")
+                                        self.socialMediaSort.append(indexed["screen_name"] as! String)
                                     }
-                                    break
+                                } else if(json.count == 1) {
+                                    let indexed = json[0] as! [String: Any]
+                                    
+                                    self.socialMediaSort = [indexed["screen_name"] as! String];
+                                    
+                                }
+                                DispatchQueue.main.async {
+                                    self.rssTable.reloadData()
+                                    self.rssTable.frame.size.height = self.getTableSizeForSocialMedia()
+                                }
+                            } catch let jsonError as NSError {
+                                print("json error: \(jsonError.localizedDescription)")
                             }
                         }
-                    
-                    case "twitter":
-                        print("Searching Twitter...")
-                        if let userID = TWTRTwitter.sharedInstance().sessionStore.session()?.userID {
-                            let client = TWTRAPIClient(userID: userID)
-                            // make requests with client
-                            let statusesShowEndpoint = "https://api.twitter.com/1.1/users/search.json"
-                            let params = ["q": textField.text!]
-                            var clientError : NSError?
-                            
-                            let request = client.urlRequest(withMethod: "GET", urlString: statusesShowEndpoint, parameters: params, error: &clientError)
-                            
-                            client.sendTwitterRequest(request) { (response, data, connectionError) -> Void in
-                                if connectionError != nil {
-                                    print("Error: \(String(describing: connectionError))")
+                    }
+                case "facebook":
+                    print("Searching Facebook...")
+                    let search_q = textField.text!.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+                    Alamofire.request("https://graph.facebook.com/search?q=\(String(describing: search_q!))&type=page&access_token=\(String(describing: fb_access_token!))&limit=10").responseJSON { response in
+                        if let data = response.result.value as? [String: Any] {
+                            if let searchItems = data["data"] as? [[String: String]] {
+                                var sa: [String] = []
+                                var sid: [String] = []
+                                if(searchItems.count != 0) {
+                                    for inc in 0...searchItems.count - 1 {
+                                        sa.append(searchItems[inc]["name"]!)
+                                        sid.append(searchItems[inc]["id"]!)
+                                    }
                                 }
-                                
-                                do {
-                                    let json = try JSONSerialization.jsonObject(with: data!, options: []) as! [Any]
-                                    print("-- data --")
-                                    if(json.count - 1 > 0) {
-                                        self.socialMediaSort = []
-                                        for index in 0...json.count - 1 {
-                                            let indexed = json[index] as! [String: Any]
-                                            
-                                            print("\(String(describing: indexed["screen_name"]))")
-                                            self.socialMediaSort.append(indexed["screen_name"] as! String)
-                                        }
-                                    } else if(json.count == 1) {
-                                        let indexed = json[0] as! [String: Any]
-                                        
-//                                        print("\(indexed["screen_name"])")
-                                        self.socialMediaSort = [indexed["screen_name"] as! String];
-                                        
-                                    }
-                                    DispatchQueue.main.async {
-                                        self.rssTable.reloadData()
-                                        self.rssTable.frame.size.height = self.getTableSizeForSocialMedia()
-                                    }
-                                } catch let jsonError as NSError {
-                                    print("json error: \(jsonError.localizedDescription)")
+                                self.socialMediaSort = sa
+                                self.specialIDList = sid
+                                DispatchQueue.main.async {
+                                    self.rssTable.reloadData()
+                                    self.rssTable.frame.size.height = self.getTableSizeForSocialMedia()
                                 }
                             }
+                        }
                     }
-                    case "facebook":
-                        print("Searching Facebook...")
+                    
                 default:
                     print("Error: Button State is invalid (SetupSourcesViewController 195 : 17)")
                 }
@@ -396,8 +445,6 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
         }
         
         // Social Media View
-        print(socialMediaData.count + 1)
-        print("Size: \(loadDefaults ? socialMediaData.count + 1 : 0)")
         return loadDefaults ? socialMediaData.count + 1 : socialMediaSort.count + 1
     }
     
@@ -456,3 +503,4 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
         }
     }
 }
+
