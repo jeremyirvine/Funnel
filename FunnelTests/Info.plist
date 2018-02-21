@@ -19,6 +19,7 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>funnel</string>
 				<string>twitterkit-FUNuuHn0EJrbxqtx5MnwfTpRB</string>
 			</array>
 		</dict>

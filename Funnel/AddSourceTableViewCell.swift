@@ -8,6 +8,7 @@
 
 import UIKit
 import TwitterKit
+import SafariServices
 
 class AddSourceTableViewCell: UITableViewCell {
 

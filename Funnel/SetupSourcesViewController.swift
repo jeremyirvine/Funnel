@@ -12,14 +12,18 @@ import UIKit
 import Alamofire
 import TwitterKit
 import SwiftyJSON
+import SafariServices
 
 
-class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var addSourcesTopView: UIView!
     @IBOutlet weak var rssTable: UITableView!
     @IBOutlet weak var searchRssField: UITextField!
     @IBOutlet weak var backBtn: UIButton!
+    
+    var sfvc: SFSafariViewController = SFSafariViewController(url: URL(string: "https://google.com")!)
+    
     let tableHeight = 44
     
     var rssData:[[String]] = []
@@ -70,6 +74,14 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
             }
             loadDefaults = true
             self.searchRssField.text = ""
+            if(UserDefaults.standard.string(forKey: "instaKey") == nil) {
+                let sfvc = SFSafariViewController(url: URL(string: "https://api.instagram.com/oauth/authorize/?client_id=c393eb225cd542d0ab0d2f1e9257f7de&redirect_uri=https://bamboo-us.com/ProjectFeed/token.php&response_type=token")!)
+                self.present(sfvc, animated: true, completion: nil)
+                self.sfvc = sfvc
+            } else {
+                let token = UserDefaults.standard.string(forKey: "instaKey")
+                print("Got Key:", token)
+            }
         } else {
             print("Saving Data...\n \(defaults)")
             let btn = sender as! UIButton
@@ -80,6 +92,9 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                     let social = String(data: socialData, encoding: .utf8)?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
                     let rss = String(data: rssData, encoding: .utf8)?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
                     let ud = UserDefaults.standard
+                    ud.set(socialMediaData, forKey: "social")
+                    ud.set(defaults, forKey: "rss")
+                    ud.synchronize()
                     Alamofire.request("https://bamboo-us.com/ProjectFeed/services.php?q=post_rss-social&rss=\(rss!)&social=\(social!)&u=\(ud.string(forKey: "login_username")!)&nonce=\(ud.string(forKey: "login_key")!)").validate().responseJSON { response in
                         switch response.result {
                         case .failure(let err):
@@ -89,6 +104,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                             if let data = response.result.value as? [String: String] {
                                 if(data["status"] == "success") {
                                     ud.set(1, forKey:"setup_complete")
+                                    ud.synchronize()
                                     self.performSegue(withIdentifier: "setupToMain", sender: self)
                                     //                                        t.dismiss(animated: true, completion: nil)
                                 } else {
@@ -151,13 +167,13 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
         } else {
             print("Adding \"\(self.socialMediaSort[sender.tag])\"...")
             print(self.socialMediaSort)
-            if(getBtnState() != "facebook") {
+            if(getBtnState() != "facebook" && getBtnState() != "instagram") {
                 socialMediaData.append([socialMediaSort[sender.tag], getBtnState()])
             } else {
                 socialMediaData.append([socialMediaSort[sender.tag], getBtnState(), specialIDList[sender.tag]])
             }
             sender.titleLabel?.text = ""
-            sender.setImage(UIImage(named:"ic_remove_circle_48pt_3x"), for: .normal)
+            sender.setBackgroundImage(UIImage(named:"ic_remove_circle_48pt_3x"), for: .normal)
             DispatchQueue.main.async {
                 self.rssTable.reloadData()
             }
@@ -263,7 +279,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                 
             } else {
                 print("Current State: \(getBtnState())")
-                if(getBtnState() != "facebook") {
+                if(getBtnState() != "facebook" && getBtnState() != "instagram") {
                     print(2)
                     if(socialMediaData.joined().contains(socialMediaSort[indexPath.row - 1])) {
                         cell.btn.setBackgroundImage(UIImage(named: "ic_remove_circle_48pt_3x"), for: .normal)
@@ -344,6 +360,47 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                 switch UserDefaults.standard.string(forKey: "_tmp_social-btn-state")! {
                 case "instagram":
                     print("Searching Instagram...")
+                    let token = UserDefaults.standard.string(forKey: "instaKey")!
+                    print("Token:", UserDefaults.standard.string(forKey: "instaKey")!)
+                    Alamofire.request("https://api.instagram.com/v1/users/search?q=\(textField.text!)&access_token=\(token)").responseJSON { response in
+                        print("Response")
+                        if let data = response.result.value as? [String: Any] {
+                            print("Data")
+                            if let searchItems = data["data"] as? [Any] {
+                                var sa: [String] = []
+                                var sid: [String] = []
+                                if(searchItems.count >= 1) {
+                                    for inc in 0...searchItems.count - 1 {
+                                        let iter = searchItems[inc] as! [String: Any]
+                                        print(iter["username"])
+                                        sa.append(iter["username"] as! String)
+                                        sid.append(iter["id"] as! String)
+                                    }
+                                }
+                                self.socialMediaSort = sa
+                                self.specialIDList = sid
+                                DispatchQueue.main.async {
+                                    self.rssTable.reloadData()
+                                    self.rssTable.frame.size.height = self.getTableSizeForSocialMedia()
+                                }
+//                                var sa: [String] = []
+//                                var sid: [String] = []
+//                                if(searchItems.count != 0) {
+//                                    for inc in 0...searchItems.count - 1 {
+//                                        print(searchItems[inc]["username"])
+//                                        sa.append(searchItems[inc]["username"]!)
+//                                        sid.append(searchItems[inc]["id"]!)
+//                                    }
+//                                }
+//                                self.socialMediaSort = sa
+//                                self.specialIDList = sid
+//                                DispatchQueue.main.async {
+//                                    self.rssTable.reloadData()
+//                                    self.rssTable.frame.size.height = self.getTableSizeForSocialMedia()
+//                                }
+                            }
+                        }
+                    }
                 case "reddit":
                     print("Searching Reddit...")
                     print(textField.text!)
@@ -447,8 +504,19 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
         // Social Media View
         return loadDefaults ? socialMediaData.count + 1 : socialMediaSort.count + 1
     }
+    @objc
+    func closeSafari() {
+        sfvc.dismiss(animated: true, completion: nil)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return true
+    }
     
     override func viewDidLoad() {
+        searchRssField.delegate = self
+        NotificationCenter.default.addObserver(self, selector: #selector(SetupSourcesViewController.closeSafari), name: NSNotification.Name(rawValue: "closeSafari"), object: nil)
         searchRssField.addTarget(self, action: #selector(textFieldDidChange(textField:)), for: UIControlEvents.editingChanged)
         rssTable.frame.size.height = getTableSizeForRSS()
         rssTable.dataSource = self

@@ -15,6 +15,7 @@ class MainViewController: UIViewController {
         UserDefaults.standard.removeObject(forKey: "login_username")
         UserDefaults.standard.removeObject(forKey: "social_media")
         UserDefaults.standard.removeObject(forKey: "rss")
+        UserDefaults.standard.removeObject(forKey: "instaKey")
         UserDefaults.standard.synchronize()
         let uac = UIAlertController(title: "Debug", message: "NSUserDefaults Cleared!", preferredStyle: .alert)
         self.present(uac, animated: true, completion: nil)

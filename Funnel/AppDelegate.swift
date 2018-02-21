@@ -15,7 +15,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-        return TWTRTwitter.sharedInstance().application(app, open: url, options: options)
+        print(url)
+        if((url.absoluteString.range(of: "funnel://") == nil)) {
+            return TWTRTwitter.sharedInstance().application(app, open: url, options: options)
+        } else {
+            // Handle Instagram
+            let substring1 = url.absoluteString[url.absoluteString.index(url.absoluteString.startIndex, offsetBy: 9)...]
+            UserDefaults.standard.set(substring1, forKey: "instaKey")
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "closeSafari"), object: nil)
+        }
+        return true
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
