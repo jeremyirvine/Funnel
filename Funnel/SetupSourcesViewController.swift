@@ -192,11 +192,6 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
     @objc func handleTwitter(sender: UIButton) {
         
     }
-    @IBAction func resetBtnPressed(_ sender: Any) {
-        if let user = TWTRTwitter.sharedInstance().sessionStore.session() {
-            TWTRTwitter.sharedInstance().sessionStore.logOutUserID(user.userID)
-        }
-    }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if(mode == "rss") {
             let cell = tableView.dequeueReusableCell(withIdentifier: "rssCell", for: indexPath) as! AddSourceTableViewCell
