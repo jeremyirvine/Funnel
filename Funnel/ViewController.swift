@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import TwitterKit
+import SwiftyJSON
 
 class ViewController: UIViewController, UITextFieldDelegate {
 
@@ -17,6 +18,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var loginView: UIView!
     @IBOutlet weak var signupView: UIView!
     var currentInterface = "mainView"
+    
+    @IBOutlet weak var splash: UILabel!
+    @IBOutlet weak var copyright: UILabel!
     
     // Sign In View Variables
     @IBOutlet weak var signinEmail: UITextField!
@@ -37,6 +41,20 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
+    }
+    
+    func convertJson(json: String) -> [[String]] {
+        let str = json.replacingOccurrences(of: "'", with: "\"")
+        let dataToConvert = str.data(using: String.Encoding(rawValue: String.Encoding.utf8.rawValue))
+        var datas: [[String]] = []
+        do {
+            let json = try JSON(data: dataToConvert!)
+            let data = json.arrayObject as! [[String]]
+            datas = data
+        } catch {
+            print(error.localizedDescription)
+        }
+        return datas
     }
     
     func alert(msg: String, title: String) {
@@ -82,6 +100,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
                             UserDefaults.standard.set(JSON["setup_complete"], forKey: "setup_complete")
                             UserDefaults.standard.set(JSON["key"], forKey: "login_key")
                             UserDefaults.standard.set(username, forKey: "login_username")
+                            UserDefaults.standard.set(self.convertJson(json: JSON["social_media"] as! String), forKey: "social_media")
+                            UserDefaults.standard.set(self.convertJson(json: JSON["news_sources"] as! String), forKey: "rss")
                             UserDefaults.standard.synchronize()
                             self.mainView.alpha = 0
                             print("\((JSON["setup_complete"] as! NSString).doubleValue) -> 0.0 = \((JSON["setup_complete"] as! NSString).doubleValue == 0.0)")
@@ -151,6 +171,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        self.splash.isHidden = true
+        self.copyright.isHidden = false
+        self.mainView.isHidden = false
+        self.signupView.isHidden = false
+        self.loginView.isHidden = false
         self.signinLoadingView.alpha = 0
         self.mainView.alpha = 1
         self.loginView.alpha = 1

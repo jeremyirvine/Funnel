@@ -53,6 +53,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="funnelBG" width="562" height="1000"/>
+        <image name="funnelBG" width="1125" height="2001"/>
     </resources>
 </document>

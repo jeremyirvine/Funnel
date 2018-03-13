@@ -23,7 +23,7 @@ class CardView: UIView {
     @IBInspectable var borderRadius: CGFloat {
         get {
             return layer.cornerRadius
-        }
+        } 
         set(newValue) {
             self.layer.cornerRadius = newValue
         }

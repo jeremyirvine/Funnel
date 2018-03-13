@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FeedKit
 
 class MainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -23,13 +24,101 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     let slideMenuSpeed: Double = 0.2
     var blurEffectView: UIVisualEffectView?
     
+    var sources: [[String]] = []
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        return sources.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             let cell = tableView.dequeueReusableCell(withIdentifier: "sourceCell", for: indexPath) as! SourceListCell
+            cell.articlePreview.text = sources[indexPath.row][1]
+            cell.articleTitle.text = sources[indexPath.row][0]
+            cell.sourceName.text = sources[indexPath.row][4]
+            if(sources[indexPath.row][4] == "twitter") {
+                cell.icon.image = UIImage(named: "twitter icon enabled")
+                cell.icon.layer.cornerRadius = 0
+                cell.articlePreviewImg.isHidden = true
+            }
+            do {
+                if let url = URL(string: sources[indexPath.row][2]) {
+                    if let data = try? Data(contentsOf: url) {
+                        if let source = UIImage(data: data) {
+                            cell.icon.image = source
+                        } else {
+                            cell.icon.image = UIImage(named: "Unkown Image")
+                        }
+                    } else {
+                        cell.icon.image = UIImage(named: "Unkown Image")
+                    }
+                } else {
+                    cell.icon.image = UIImage(named: "Unknown_Image")
+                }
+                
+            } catch {
+                print(error.localizedDescription)
+        }
+
             return cell
+    }
+    
+    func setSources() {
+        let ud = UserDefaults.standard
+        for (key, value) in ud.dictionaryRepresentation() {
+            print("\(key) = \(value) \n")
+        }
+        let rssData = ud.object(forKey: "rss") as! [[String]]
+        print(rssData.count)
+        rssData.forEach { (source) in
+            let feedurl = URL(string: source[1])
+            let parser = FeedParser(URL: feedurl!)
+            print("URL:", source[1])
+            parser?.parseAsync(result: { (result) in
+                print("Success")
+                print(result.rssFeed?.items?.forEach({ (entry) in
+                    print("rssFeed in", source[1])
+                    //                print(entry.title)
+                    let str = entry.content?.contentEncoded?.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil).replacingOccurrences(of: "\n", with: "")
+                    //                print(entry.content?.value?.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil).replacingOccurrences(of: "\n", with: "")    )
+                    self.sources.append([entry.title!, str!, (result.rssFeed?.image?.url!)!, "nope", source[0]])
+                    DispatchQueue.main.async {
+                        self.sourcesTable.reloadData()
+                    }
+                }))
+                print(result.atomFeed?.entries?.forEach({ (entry) in
+                    print("atomFeed in", source[1])
+                    //                print(entry.title)
+                    let str = entry.content?.value?.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil).replacingOccurrences(of: "\n", with: "")
+                    //                print(entry.content?.value?.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil).replacingOccurrences(of: "\n", with: "")    )
+                    self.sources.append([entry.title!, str!, (result.atomFeed?.icon)!, "nope", source[0]])
+                    DispatchQueue.main.async {
+                        self.sourcesTable.reloadData()
+                    }
+                }))
+                result.jsonFeed?.items?.forEach({ (entry) in
+                    print("jsonFeed in", source[1])
+                    //                print(entry.title)
+                    let str = entry.contentText
+                    //                print(entry.content?.value?.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil).replacingOccurrences(of: "\n", with: "")    )
+                    self.sources.append([entry.title!, str!, (result.jsonFeed?.icon)!, "nope", source[0]])
+                    DispatchQueue.main.async {
+                        self.sourcesTable.reloadData()
+                    }
+                })
+            })
+        }
+        
+        
+        // Schema:
+        // 0: Article Title
+        // 1: Preview Content
+        // 2: Source Thumbnail Url?
+        // 3: Article Thumbnail Url?
+        // 4: Source Name
+        
+//        sources = [["Test", "Lol this is text?", "nope", "nope", "Ars Technica"],
+//                   ["jezza_dev", "I know iBoot got leaked, but did the SecureROM or BootROM get leaked?", "nope", "nope", "twitter"],
+//                   ["FCE365", "AAAAAAAAAAAAAAAAAA", "nope", "nope", "twitter"]]
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -51,6 +140,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         slideMenuContainer.frame = SlideMenuView.frame
         menuFeedBtn.contentEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0)
         menuSourcesBtn.contentEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0)
+        setSources()
 //        menuSettingsBtn.contentEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0)
        
         // Do any additional setup after loading the view.
