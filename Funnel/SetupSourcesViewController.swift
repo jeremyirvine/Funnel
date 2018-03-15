@@ -485,7 +485,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                     }
                     
                 default:
-                    print("Error: Button State is invalid (SetupSourcesViewController 195 : 17)")
+                    print("Error: Button State is invalid (SetupSourcesViewController 487 : 17)")
                 }
             }
         }

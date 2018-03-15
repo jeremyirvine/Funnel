@@ -7,8 +7,20 @@
 //
 
 import UIKit
+import TwitterKit
 import FeedKit
+import SwiftyJSON
 
+extension Date
+{
+    func toString( dateFormat format  : String ) -> String
+    {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        return dateFormatter.string(from: self)
+    }
+    
+}
 class MainViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var menuBtn: UIButton!
@@ -19,15 +31,45 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var menuSourcesBtn: UIButton!
     @IBOutlet weak var menuSettingsBtn: UIButton!
     
+    @IBAction func unwindToMenu(segue: UIStoryboardSegue) {
+        let src = segue.source
+        let dst = segue.destination
+
+        UIView.animate(withDuration: 0.25,
+                       delay: 0.0,
+                       options: .curveEaseInOut,
+                       animations: {
+                        dst.view.transform = CGAffineTransform(translationX: src.view.frame.size.width, y: 0)
+        },
+                       completion: { finished in
+                        src.present(dst, animated: false, completion: nil)
+        }
+        )
+    }
+    
     var slideMode = "closed"
     
     let slideMenuSpeed: Double = 0.2
     var blurEffectView: UIVisualEffectView?
+    var imageNames: [String: String] = [:]
     
     var sources: [[String]] = []
     
+    @IBAction func menuFeedBtnPressed(_ sender: Any) {
+    }
+    @IBAction func menuSourcesBtnPressed(_ sender: Any) {
+    }
+    @IBAction func menuSettingsBtnPressed(_ sender: Any) {
+        print("Settings")
+        performSegue(withIdentifier: "mainToSettings", sender: self)
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return sources.count
+    }
+    
+    func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -39,35 +81,44 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                 cell.icon.image = UIImage(named: "twitter icon enabled")
                 cell.icon.layer.cornerRadius = 0
                 cell.articlePreviewImg.isHidden = true
-            }
-            do {
-                if let url = URL(string: sources[indexPath.row][2]) {
-                    if let data = try? Data(contentsOf: url) {
-                        if let source = UIImage(data: data) {
-                            cell.icon.image = source
+            } else {
+                cell.icon.layer.cornerRadius = cell.icon.frame.height / 2
+            if imageNames.contains(where: {$0.key == sources[indexPath.row][2]}) {
+                let imageURL = getDocumentsDirectory().appendingPathComponent(imageNames[sources[indexPath.row][2]]! + ".png")
+                let image    = UIImage(contentsOfFile: imageURL.path)
+                cell.icon.image = image
+            } else {
+                do {
+                    if let url = URL(string: sources[indexPath.row][2]) {
+                        if let data = try? Data(contentsOf: url) {
+                            if let source = UIImage(data: data) {
+                                cell.icon.image = source
+                                if let data = UIImagePNGRepresentation(source) {
+                                    let nonce = UUID().uuidString
+                                    imageNames[sources[indexPath.row][2]] = nonce
+                                    let filename = getDocumentsDirectory().appendingPathComponent(nonce + ".png")
+                                    try? data.write(to: filename)
+                                }
+                            } else {
+                                cell.icon.image = UIImage(named: "Unkown_Image")
+                            }
                         } else {
-                            cell.icon.image = UIImage(named: "Unkown Image")
+                            cell.icon.image = UIImage(named: "Unkown_Image")
                         }
                     } else {
-                        cell.icon.image = UIImage(named: "Unkown Image")
+                        cell.icon.image = UIImage(named: "Unknown_Image")
                     }
-                } else {
-                    cell.icon.image = UIImage(named: "Unknown_Image")
+                    
                 }
-                
-            } catch {
-                print(error.localizedDescription)
+            }
         }
-
-            return cell
+        return cell
     }
     
     func setSources() {
         let ud = UserDefaults.standard
-        for (key, value) in ud.dictionaryRepresentation() {
-            print("\(key) = \(value) \n")
-        }
         let rssData = ud.object(forKey: "rss") as! [[String]]
+        let socialData = ud.object(forKey: "social_media") as! [[String]]
         print(rssData.count)
         rssData.forEach { (source) in
             let feedurl = URL(string: source[1])
@@ -75,39 +126,47 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             print("URL:", source[1])
             parser?.parseAsync(result: { (result) in
                 print("Success")
-                print(result.rssFeed?.items?.forEach({ (entry) in
+                result.rssFeed?.items?.forEach({ (entry) in
                     print("rssFeed in", source[1])
-                    //                print(entry.title)
                     let str = entry.content?.contentEncoded?.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil).replacingOccurrences(of: "\n", with: "")
-                    //                print(entry.content?.value?.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil).replacingOccurrences(of: "\n", with: "")    )
                     self.sources.append([entry.title!, str!, (result.rssFeed?.image?.url!)!, "nope", source[0]])
                     DispatchQueue.main.async {
+                        self.sources.sort(by: {$0[0] > $1[0]})
                         self.sourcesTable.reloadData()
                     }
-                }))
-                print(result.atomFeed?.entries?.forEach({ (entry) in
+                })
+                result.atomFeed?.entries?.forEach({ (entry) in
                     print("atomFeed in", source[1])
-                    //                print(entry.title)
                     let str = entry.content?.value?.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil).replacingOccurrences(of: "\n", with: "")
-                    //                print(entry.content?.value?.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil).replacingOccurrences(of: "\n", with: "")    )
-                    self.sources.append([entry.title!, str!, (result.atomFeed?.icon)!, "nope", source[0]])
+                    let date = entry.published
+                    self.sources.append([entry.title!, str!, (result.atomFeed?.icon)!, "nope", source[0], (date?.toString(dateFormat: "MM-dd-yyy"))!])
                     DispatchQueue.main.async {
+                        self.sources.sort(by: {$0[0] > $1[0]})
                         self.sourcesTable.reloadData()
                     }
-                }))
+                })
                 result.jsonFeed?.items?.forEach({ (entry) in
                     print("jsonFeed in", source[1])
-                    //                print(entry.title)
                     let str = entry.contentText
-                    //                print(entry.content?.value?.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil).replacingOccurrences(of: "\n", with: "")    )
-                    self.sources.append([entry.title!, str!, (result.jsonFeed?.icon)!, "nope", source[0]])
+                    let date = entry.datePublished
+                    self.sources.append([entry.title!, str!, (result.jsonFeed?.icon)!, "nope", source[0], (date?.toString(dateFormat: "MM-dd-yyy"))!])
                     DispatchQueue.main.async {
+                        self.sources.sort(by: {$0[0] > $1[0]})
                         self.sourcesTable.reloadData()
                     }
                 })
             })
         }
         
+        socialData.forEach { (source) in
+            if(source[1] == "twitter") {
+                grabSocial(twtr_id: source[0])
+            }
+        }
+        sources.sort(by: {$0[0] > $1[0]})
+        DispatchQueue.main.async {
+            self.sourcesTable.reloadData()
+        }
         
         // Schema:
         // 0: Article Title
@@ -115,10 +174,30 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         // 2: Source Thumbnail Url?
         // 3: Article Thumbnail Url?
         // 4: Source Name
-        
-//        sources = [["Test", "Lol this is text?", "nope", "nope", "Ars Technica"],
-//                   ["jezza_dev", "I know iBoot got leaked, but did the SecureROM or BootROM get leaked?", "nope", "nope", "twitter"],
-//                   ["FCE365", "AAAAAAAAAAAAAAAAAA", "nope", "nope", "twitter"]]
+    }
+    
+    func grabSocial(twtr_id: String) {
+        if let userID = TWTRTwitter.sharedInstance().sessionStore.session()?.userID {
+            let client = TWTRAPIClient(userID: userID)
+            let parameter : [String : AnyObject] = ["screen_name" : twtr_id as AnyObject , "count" : "10" as AnyObject]
+            let req = client.urlRequest(withMethod: "GET", urlString: "https://api.twitter.com/1.1/statuses/user_timeline.json", parameters: parameter, error: nil)
+            NSURLConnection.sendAsynchronousRequest(req, queue: .main, completionHandler: { (response, data, error) in
+                if error != nil {
+                    print(error?.localizedDescription)
+                } else {
+                    print("Got Social Response: ")
+                    SwiftyJSON.JSON(data).forEach({ (post) in
+                        print(post.1["text"])
+                        let text = post.1["text"]
+                        self.sources.append([twtr_id, text.rawString()!, "twitter", "nope", "twitter"])
+                        DispatchQueue.main.async {
+                            self.sources.sort(by: {$0[0] > $1[0]})
+                            self.sourcesTable.reloadData()
+                        }
+                    })
+                }
+            })
+        }
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {

@@ -45,6 +45,8 @@
 		97AADC252024263C00D08481 /* image.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97AADC232024263C00D08481 /* image.storyboard */; };
 		97AADC302024263C00D08481 /* FunnelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97AADC2F2024263C00D08481 /* FunnelTests.swift */; };
 		97AADC3B2024263C00D08481 /* FunnelUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97AADC3A2024263C00D08481 /* FunnelUITests.swift */; };
+		97B0B84D2059BB9100F3F420 /* SegueFromLeft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97B0B84C2059BB9000F3F420 /* SegueFromLeft.swift */; };
+		97B0B84F2059BDF100F3F420 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97B0B84E2059BDF100F3F420 /* SettingsViewController.swift */; };
 		97BDC1EA2028E9A600293E7B /* AddSourceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97BDC1E92028E9A600293E7B /* AddSourceTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
@@ -123,6 +125,8 @@
 		97AADC362024263C00D08481 /* FunnelUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FunnelUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		97AADC3A2024263C00D08481 /* FunnelUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunnelUITests.swift; sourceTree = "<group>"; };
 		97AADC3C2024263C00D08481 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		97B0B84C2059BB9000F3F420 /* SegueFromLeft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegueFromLeft.swift; sourceTree = "<group>"; };
+		97B0B84E2059BDF100F3F420 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		97BDC1E92028E9A600293E7B /* AddSourceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSourceTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -212,6 +216,8 @@
 				976C5473203DFF3400C42911 /* CardView.swift */,
 				9752ACE3203F9ED300BE95BE /* PushNoAnimationSegue.swift */,
 				971BD493203FCBAD00667CD2 /* MenuButton.swift */,
+				97B0B84C2059BB9000F3F420 /* SegueFromLeft.swift */,
+				97B0B84E2059BDF100F3F420 /* SettingsViewController.swift */,
 			);
 			path = Funnel;
 			sourceTree = "<group>";
@@ -386,11 +392,13 @@
 				971BD494203FCBAD00667CD2 /* MenuButton.swift in Sources */,
 				97AADC1B2024263C00D08481 /* AppDelegate.swift in Sources */,
 				9752ACE4203F9ED300BE95BE /* PushNoAnimationSegue.swift in Sources */,
+				97B0B84D2059BB9100F3F420 /* SegueFromLeft.swift in Sources */,
 				976C5472203DFB4100C42911 /* SourceListCell.swift in Sources */,
 				976B064E202577F500F04F71 /* FadeSegue.swift in Sources */,
 				97BDC1EA2028E9A600293E7B /* AddSourceTableViewCell.swift in Sources */,
 				976C5474203DFF3400C42911 /* CardView.swift in Sources */,
 				976B0656202650CA00F04F71 /* MainViewController.swift in Sources */,
+				97B0B84F2059BDF100F3F420 /* SettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
