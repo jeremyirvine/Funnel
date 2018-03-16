@@ -31,6 +31,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var menuSourcesBtn: UIButton!
     @IBOutlet weak var menuSettingsBtn: UIButton!
     
+    var shouldLogout = false
+    
     @IBAction func unwindToMenu(segue: UIStoryboardSegue) {
         let src = segue.source
         let dst = segue.destination
@@ -204,9 +206,22 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         return .lightContent
     }
     
+    @objc func closeDrawer(sender : UITapGestureRecognizer) {
+        slideMode = "closed"
+        UIView.animate(withDuration: slideMenuSpeed) {
+            self.blurEffectView?.frame.origin.x = self.view.frame.width
+            self.SlideMenuView.frame.origin.x = self.view.frame.width
+            self.slideMenuContainer.frame.origin.x = self.view.frame.width
+        }
+    }
+    
     @IBOutlet weak var backgroundView: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
+        let gesture = UITapGestureRecognizer(target: self, action:  #selector(self.closeDrawer))
+        self.sourcesTable.addGestureRecognizer(gesture)
+        
+        
         let blurEffect = UIBlurEffect(style: .regular)
         blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView?.frame = SlideMenuView.frame
@@ -297,5 +312,11 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewDidAppear(_ animated: Bool) {
         backgroundView.image = UIImage(named: "TopBar")
+        let should_log = UserDefaults.standard.bool(forKey: "should_logout")
+            if(should_log) {
+                print("Logging Out...")
+                UserDefaults.standard.set(false, forKey:"should_logout")
+                dismiss(animated: true, completion: nil)
+            }
     }
 }

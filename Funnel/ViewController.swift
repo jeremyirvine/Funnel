@@ -102,6 +102,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                             UserDefaults.standard.set(username, forKey: "login_username")
                             UserDefaults.standard.set(self.convertJson(json: JSON["social_media"] as! String), forKey: "social_media")
                             UserDefaults.standard.set(self.convertJson(json: JSON["news_sources"] as! String), forKey: "rss")
+                            UserDefaults.standard.set(JSON["email"], forKey: "login_email")
                             UserDefaults.standard.synchronize()
                             self.mainView.alpha = 0
                             print("\((JSON["setup_complete"] as! NSString).doubleValue) -> 0.0 = \((JSON["setup_complete"] as! NSString).doubleValue == 0.0)")
@@ -186,6 +187,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
             } else {
                 self.performSegue(withIdentifier: "mainToSetup", sender: self)
             }
+            self.splash.isHidden = false
+            self.copyright.isHidden = true
             self.mainView.alpha = 0
             self.loginView.alpha = 0
             self.signupView.alpha = 0
