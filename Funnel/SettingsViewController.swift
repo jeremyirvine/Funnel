@@ -17,22 +17,19 @@ class SettingsViewController: UIViewController {
     }
     var shouldLogout = false
     
-    @IBAction func editPasswordPressed(_ sender: Any) {
-    }
-    @IBAction func editEmailPressed(_ sender: Any) {
-        //1. Create the alert controller.
-        let alert = UIAlertController(title: "Edit Email", message: "Enter a new email", preferredStyle: .alert)
+    @IBAction func devOptionsPressed(_ sender: Any) {
         
-        //2. Add the text field. You can configure it however you need.
+    }
+    @IBAction func editPasswordPressed(_ sender: Any) {
+        let alert = UIAlertController(title: "Edit Password", message: "Enter a new password", preferredStyle: .alert)
         alert.addTextField { (textField) in
-            textField.placeholder = "Password"
+            textField.placeholder = "Old Password"
             textField.isSecureTextEntry = true
         }
         alert.addTextField { (textField) in
-            textField.placeholder = "New Email"
+            textField.placeholder = "New Password"
+            textField.isSecureTextEntry = true
         }
-        
-        // 3. Grab the value from the text field, and print it when the user clicks OK.
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (_) in
             let password = alert?.textFields![0]
             let email = alert?.textFields![1]
@@ -40,8 +37,24 @@ class SettingsViewController: UIViewController {
             print("Email field: \(email?.text)")
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
-        
-        // 4. Present the alert.
+        self.present(alert, animated: true, completion: nil)
+    }
+    @IBAction func editEmailPressed(_ sender: Any) {
+        let alert = UIAlertController(title: "Edit Email", message: "Enter a new email", preferredStyle: .alert)
+        alert.addTextField { (textField) in
+            textField.placeholder = "Password"
+            textField.isSecureTextEntry = true
+        }
+        alert.addTextField { (textField) in
+            textField.placeholder = "New Email"
+        }
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (_) in
+            let password = alert?.textFields![0]
+            let email = alert?.textFields![1]
+            print("Password field: \(password?.text)")
+            print("Email field: \(email?.text)")
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
     @IBAction func logoutBtnPressed(_ sender: Any) {

@@ -1,9 +1,9 @@
 {
-  "commitish" : "6.2.0",
+  "commitish" : "7.0.1",
   "iOS" : [
     {
       "name" : "FeedKit",
-      "hash" : "c1cf36df39b6a3d1a363956ec0f6253a29b95821c3baa50186accaacd525ee57"
+      "hash" : "765097de568b09bac0f0466afa1097f536d7d80aa68eaa5b72041aa464cae884"
     }
   ]
 }

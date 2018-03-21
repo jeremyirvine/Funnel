@@ -2,15 +2,15 @@
 //  FadeSegue.swift
 //  Funnel
 //
-//  Created by Jeremy Irvine on 2/2/18.
+//  Created by Jeremy Irvine on 3/17/18.
 //  Copyright © 2018 Bamboo Technologies. All rights reserved.
 //
 
 import UIKit
 
 class FadeSegue: UIStoryboardSegue {
-    
     override func perform() {
+        // Get the view of the source
         let sourceViewControllerView = self.source.view
         // Get the view of the destination
         let destinationViewControllerView = self.destination.view
@@ -26,11 +26,13 @@ class FadeSegue: UIStoryboardSegue {
         destinationViewControllerView?.alpha = 0;
         sourceViewControllerView?.addSubview(destinationViewControllerView!);
         // Animate the fade, remove the destination view on completion and present the full view controller
-        UIView.animate(withDuration: 1, animations: {
+        UIView.animate(withDuration: 0.5, animations: {
             destinationViewControllerView?.alpha = 1;
+//            sourceViewControllerView?.alpha = 0
         }, completion: { (finished) in
-            destinationViewControllerView?.removeFromSuperview()
+//            destinationViewControllerView?.removeFromSuperview()
             self.source.present(self.destination, animated: false, completion: nil)
         })
     }
-}
+    }
+

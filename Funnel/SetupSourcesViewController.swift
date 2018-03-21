@@ -95,7 +95,18 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                     ud.set(socialMediaData, forKey: "social")
                     ud.set(defaults, forKey: "rss")
                     ud.synchronize()
-                    Alamofire.request("https://bamboo-us.com/ProjectFeed/services.php?q=post_rss-social&rss=\(rss!)&social=\(social!)&u=\(ud.string(forKey: "login_username")!)&nonce=\(ud.string(forKey: "login_key")!)").validate().responseJSON { response in
+
+                    var twt_key = ""
+                    if let twt_key_s = ud.string(forKey: "twt_key") {
+                        twt_key = twt_key_s
+                    }
+                    if let twt_key_st = TWTRTwitter.sharedInstance().sessionStore.session()?.authToken {
+                        ud.set(twt_key_st, forKey: "twt_key")
+                        ud.synchronize()
+                        twt_key = twt_key_st
+                    }
+                    print("https://bamboo-us.com/ProjectFeed/services.php?q=post_rss-social&rss=\(rss!)&social=\(social!)&u=\(ud.string(forKey: "login_username")!)&nonce=\(ud.string(forKey: "login_key")!)&twt_key=\(twt_key)")
+                    Alamofire.request("https://bamboo-us.com/ProjectFeed/services.php?q=post_rss-social&rss=\(rss!)&social=\(social!)&u=\(ud.string(forKey: "login_username")!)&nonce=\(ud.string(forKey: "login_key")!)&twt_key=\(twt_key)").validate().responseJSON { response in
                         switch response.result {
                         case .failure(let err):
                             print(err)
@@ -355,7 +366,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                 switch UserDefaults.standard.string(forKey: "_tmp_social-btn-state")! {
                 case "instagram":
                     print("Searching Instagram...")
-                    let token = UserDefaults.standard.string(forKey: "instaKey")!
+                    if let token = UserDefaults.standard.string(forKey: "instaKey") as? String {
                     print("Token:", UserDefaults.standard.string(forKey: "instaKey")!)
                     Alamofire.request("https://api.instagram.com/v1/users/search?q=\(textField.text!)&access_token=\(token)").responseJSON { response in
                         print("Response")
@@ -396,6 +407,11 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                             }
                         }
                     }
+                    } else {
+                        let sfvc = SFSafariViewController(url: URL(string: "https://api.instagram.com/oauth/authorize/?client_id=c393eb225cd542d0ab0d2f1e9257f7de&redirect_uri=https://bamboo-us.com/ProjectFeed/token.php&response_type=token")!)
+                        self.present(sfvc, animated: true, completion: nil)
+                        self.sfvc = sfvc
+                    }
                 case "reddit":
                     print("Searching Reddit...")
                     print(textField.text!)
@@ -421,6 +437,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                 case "twitter":
                     print("Searching Twitter...")
                     if let userID = TWTRTwitter.sharedInstance().sessionStore.session()?.userID {
+                        
                         let client = TWTRAPIClient(userID: userID)
                         // make requests with client
                         let statusesShowEndpoint = "https://api.twitter.com/1.1/users/search.json"
@@ -435,7 +452,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                             }
                             
                             do {
-                                let json = try JSONSerialization.jsonObject(with: data!, options: []) as! [Any]
+                                if let json = try JSONSerialization.jsonObject(with: data!, options: []) as? [Any]  {
                                 print("-- data --")
                                 if(json.count - 1 > 0) {
                                     self.socialMediaSort = []
@@ -455,6 +472,7 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                                     self.rssTable.reloadData()
                                     self.rssTable.frame.size.height = self.getTableSizeForSocialMedia()
                                 }
+                            }
                             } catch let jsonError as NSError {
                                 print("json error: \(jsonError.localizedDescription)")
                             }

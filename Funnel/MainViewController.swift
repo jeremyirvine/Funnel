@@ -10,6 +10,7 @@ import UIKit
 import TwitterKit
 import FeedKit
 import SwiftyJSON
+import Alamofire
 
 extension Date
 {
@@ -79,10 +80,46 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             cell.articlePreview.text = sources[indexPath.row][1]
             cell.articleTitle.text = sources[indexPath.row][0]
             cell.sourceName.text = sources[indexPath.row][4]
+            cell.icon.frame.size.width = 25
+            cell.icon.frame.size.height = 25
             if(sources[indexPath.row][4] == "twitter") {
                 cell.icon.image = UIImage(named: "twitter icon enabled")
                 cell.icon.layer.cornerRadius = 0
                 cell.articlePreviewImg.isHidden = true
+            } else if(sources[indexPath.row][2] == "reddit") {
+                cell.icon.image = UIImage(named: "reddit icon red")
+                cell.icon.layer.cornerRadius = 0
+                cell.articlePreviewImg.isHidden = false
+                if imageNames.contains(where: {$0.key == sources[indexPath.row][3]}) {
+                    let imageURL = getDocumentsDirectory().appendingPathComponent(imageNames[sources[indexPath.row][3]]! + ".png")
+                    let image    = UIImage(contentsOfFile: imageURL.path)
+                    cell.articlePreviewImg.image = image
+                } else {
+                    cell.articlePreviewImg.image = UIImage(named: "Unkown_Image")
+                }
+//                    do {
+//                        if let url = URL(string: sources[indexPath.row][3]) {
+//                            if let data = try? Data(contentsOf: url) {
+//                                if let source = UIImage(data: data) {
+//                                    cell.articlePreviewImg.image = source
+//                                    if let data = UIImagePNGRepresentation(source) {
+//                                        let nonce = UUID().uuidString
+//                                        imageNames[sources[indexPath.row][3]] = nonce
+//                                        let filename = getDocumentsDirectory().appendingPathComponent(nonce + ".png")
+//                                        try? data.write(to: filename)
+//                                    }
+//                                } else {
+//                                    cell.articlePreviewImg.image = UIImage(named: "Unkown_Image")
+//                                }
+//                            } else {
+//                                cell.articlePreviewImg.image = UIImage(named: "Unkown_Image")
+//                            }
+//                        } else {
+//                            cell.articlePreviewImg.image = UIImage(named: "Unknown_Image")
+//                        }
+//
+//                    }
+//                }
             } else {
                 cell.icon.layer.cornerRadius = cell.icon.frame.height / 2
             if imageNames.contains(where: {$0.key == sources[indexPath.row][2]}) {
@@ -124,21 +161,24 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         print(rssData.count)
         rssData.forEach { (source) in
             let feedurl = URL(string: source[1])
-            let parser = FeedParser(URL: feedurl!)
+            print("Searching: \(feedurl!)...")
+           
             print("URL:", source[1])
+            let parser = FeedParser(URL: feedurl!)
             parser?.parseAsync(result: { (result) in
                 print("Success")
+                print(result.error?.localizedDescription)
                 result.rssFeed?.items?.forEach({ (entry) in
-                    print("rssFeed in", source[1])
+//                    print(entry.)
                     let str = entry.content?.contentEncoded?.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil).replacingOccurrences(of: "\n", with: "")
-                    self.sources.append([entry.title!, str!, (result.rssFeed?.image?.url!)!, "nope", source[0]])
+                    print(entry.dublinCore?.dcCreator)
+                    self.sources.append([entry.title!, str!, (result.rssFeed?.image?.url!) ?? "", "nope", source[0]])
                     DispatchQueue.main.async {
                         self.sources.sort(by: {$0[0] > $1[0]})
                         self.sourcesTable.reloadData()
                     }
                 })
                 result.atomFeed?.entries?.forEach({ (entry) in
-                    print("atomFeed in", source[1])
                     let str = entry.content?.value?.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil).replacingOccurrences(of: "\n", with: "")
                     let date = entry.published
                     self.sources.append([entry.title!, str!, (result.atomFeed?.icon)!, "nope", source[0], (date?.toString(dateFormat: "MM-dd-yyy"))!])
@@ -148,7 +188,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                     }
                 })
                 result.jsonFeed?.items?.forEach({ (entry) in
-                    print("jsonFeed in", source[1])
                     let str = entry.contentText
                     let date = entry.datePublished
                     self.sources.append([entry.title!, str!, (result.jsonFeed?.icon)!, "nope", source[0], (date?.toString(dateFormat: "MM-dd-yyy"))!])
@@ -160,15 +199,21 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             })
         }
         
+//        print(socialData)
         socialData.forEach { (source) in
+            print(source[0])
             if(source[1] == "twitter") {
+                print()
                 grabSocial(twtr_id: source[0])
+            } else if (source[1] == "reddit") {
+                grabSocial(reddit_id: source[0])
             }
         }
         sources.sort(by: {$0[0] > $1[0]})
         DispatchQueue.main.async {
             self.sourcesTable.reloadData()
         }
+        
         
         // Schema:
         // 0: Article Title
@@ -178,18 +223,67 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         // 4: Source Name
     }
     
+    func grabSocial(reddit_id: String) {
+//        print("Getting social for https://reddit.com/\(reddit_id)/new.json?sort=new")
+        let url = "https://reddit.com/\(reddit_id)/new.json?sort=new"
+        Alamofire.request(url).responseJSON { response in
+            if((response.result.value) != nil) {
+                let swiftyJsonVar = JSON(response.result.value!)
+//                print(swiftyJsonVar["data"]["children"][0]["data"]["title"])
+                let children = swiftyJsonVar["data"]["children"]
+                children.forEach({ (arr) in
+//                    print(arr.1["data"]["title"])
+                    let title = arr.1["data"]["title"].string!
+                    let thumbnail = arr.1["data"]["thumbnail"].string!
+                    let author = arr.1["data"]["author"].string!
+                    self.sources.append([author, title, "reddit", thumbnail, "reddit (" + reddit_id + ")"])
+                    if self.imageNames.contains(where: {$0.key == thumbnail}) {
+                        DispatchQueue.main.async {
+                            self.sources.sort(by: {$0[0] > $1[0]})
+//                            self.sourcesTable.reloadData()
+                        }
+                       return
+                    } else {
+                        do {
+                            if let url = URL(string: thumbnail) {
+                                if let data = try? Data(contentsOf: url) {
+                                    if let source = UIImage(data: data) {
+                                        if let data = UIImagePNGRepresentation(source) {
+                                            let nonce = UUID().uuidString
+                                            self.imageNames[thumbnail] = nonce
+                                            let filename = self.getDocumentsDirectory().appendingPathComponent(nonce + ".png")
+                                            try? data.write(to: filename)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    DispatchQueue.main.async {
+                        self.sources.sort(by: {$0[0] > $1[0]})
+//                        self.sourcesTable.reloadData()
+                    }
+                })
+            }
+        }
+    }
+    
     func grabSocial(twtr_id: String) {
-        if let userID = TWTRTwitter.sharedInstance().sessionStore.session()?.userID {
+        print("Getting social for \(twtr_id)...")
+        let ud = UserDefaults.standard
+        if let userID = UserDefaults.standard.string(forKey: "twt_key") as? String{
+            print("Got ID: \(userID)")
             let client = TWTRAPIClient(userID: userID)
-            let parameter : [String : AnyObject] = ["screen_name" : twtr_id as AnyObject , "count" : "10" as AnyObject]
+            let parameter : [String : Any] = ["screen_name" : twtr_id , "count" : "10" as AnyObject]
+            print("Params: \(parameter)")
             let req = client.urlRequest(withMethod: "GET", urlString: "https://api.twitter.com/1.1/statuses/user_timeline.json", parameters: parameter, error: nil)
             NSURLConnection.sendAsynchronousRequest(req, queue: .main, completionHandler: { (response, data, error) in
                 if error != nil {
                     print(error?.localizedDescription)
                 } else {
-                    print("Got Social Response: ")
+//                    print("Got Social Response: ")
                     SwiftyJSON.JSON(data).forEach({ (post) in
-                        print(post.1["text"])
+                        print(post.1)
                         let text = post.1["text"]
                         self.sources.append([twtr_id, text.rawString()!, "twitter", "nope", "twitter"])
                         DispatchQueue.main.async {

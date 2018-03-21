@@ -8,12 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		971BD494203FCBAD00667CD2 /* MenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 971BD493203FCBAD00667CD2 /* MenuButton.swift */; };
-		974FA1AD2055DD700062FF9A /* TwitterShareExtensionUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 974FA1A92055DD700062FF9A /* TwitterShareExtensionUI.framework */; };
-		974FA1AE2055DD700062FF9A /* TwitterShareExtensionUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 974FA1A92055DD700062FF9A /* TwitterShareExtensionUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		974FA1AF2055DD700062FF9A /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 974FA1AA2055DD700062FF9A /* SwiftyJSON.framework */; };
 		974FA1B02055DD700062FF9A /* SwiftyJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 974FA1AA2055DD700062FF9A /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		974FA1B12055DD700062FF9A /* TwitterCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 974FA1AB2055DD700062FF9A /* TwitterCore.framework */; };
-		974FA1B22055DD700062FF9A /* TwitterCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 974FA1AB2055DD700062FF9A /* TwitterCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		974FA1B32055DD700062FF9A /* TwitterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 974FA1AC2055DD700062FF9A /* TwitterKit.framework */; };
 		974FA1B42055DD700062FF9A /* TwitterKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 974FA1AC2055DD700062FF9A /* TwitterKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		974FA1B62055DDFA0062FF9A /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 976B065120264D0E00F04F71 /* Alamofire.framework */; };
@@ -22,11 +18,14 @@
 		974FA1BC2055E2E70062FF9A /* FeedKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 974FA1BA2055E2E70062FF9A /* FeedKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9752ACE4203F9ED300BE95BE /* PushNoAnimationSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9752ACE3203F9ED300BE95BE /* PushNoAnimationSegue.swift */; };
 		976B064A202570C200F04F71 /* SetupSourcesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976B0649202570C200F04F71 /* SetupSourcesViewController.swift */; };
-		976B064E202577F500F04F71 /* FadeSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976B064D202577F500F04F71 /* FadeSegue.swift */; };
 		976B0656202650CA00F04F71 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976B0655202650CA00F04F71 /* MainViewController.swift */; };
 		976B06582026E56000F04F71 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 976B06572026E56000F04F71 /* Images.xcassets */; };
 		976C5472203DFB4100C42911 /* SourceListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976C5471203DFB4100C42911 /* SourceListCell.swift */; };
 		976C5474203DFF3400C42911 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976C5473203DFF3400C42911 /* CardView.swift */; };
+		9779EB43205DAF07003CF9FA /* FadeSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9779EB42205DAF07003CF9FA /* FadeSegue.swift */; };
+		9779EB45205DB2D5003CF9FA /* DeveloperOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9779EB44205DB2D5003CF9FA /* DeveloperOptionsViewController.swift */; };
+		9779EB46205DB5BC003CF9FA /* TwitterShareExtensionUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 974FA1A92055DD700062FF9A /* TwitterShareExtensionUI.framework */; };
+		9779EB47205DB5BC003CF9FA /* TwitterShareExtensionUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 974FA1A92055DD700062FF9A /* TwitterShareExtensionUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		979F99DB203FDC5E00071509 /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 979F99CA203FDC3000071509 /* Roboto-Black.ttf */; };
 		979F99DC203FDC5E00071509 /* Roboto-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 979F99CF203FDC3100071509 /* Roboto-BlackItalic.ttf */; };
 		979F99DD203FDC5E00071509 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 979F99C5203FDC3000071509 /* Roboto-Bold.ttf */; };
@@ -74,9 +73,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				9779EB47205DB5BC003CF9FA /* TwitterShareExtensionUI.framework in Embed Frameworks */,
 				974FA1B02055DD700062FF9A /* SwiftyJSON.framework in Embed Frameworks */,
-				974FA1B22055DD700062FF9A /* TwitterCore.framework in Embed Frameworks */,
-				974FA1AE2055DD700062FF9A /* TwitterShareExtensionUI.framework in Embed Frameworks */,
 				974FA1B72055DDFA0062FF9A /* Alamofire.framework in Embed Frameworks */,
 				974FA1B42055DD700062FF9A /* TwitterKit.framework in Embed Frameworks */,
 				974FA1BC2055E2E70062FF9A /* FeedKit.framework in Embed Frameworks */,
@@ -95,12 +93,13 @@
 		974FA1BA2055E2E70062FF9A /* FeedKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FeedKit.framework; path = Carthage/Build/iOS/FeedKit.framework; sourceTree = "<group>"; };
 		9752ACE3203F9ED300BE95BE /* PushNoAnimationSegue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNoAnimationSegue.swift; sourceTree = "<group>"; };
 		976B0649202570C200F04F71 /* SetupSourcesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupSourcesViewController.swift; sourceTree = "<group>"; };
-		976B064D202577F500F04F71 /* FadeSegue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeSegue.swift; sourceTree = "<group>"; };
 		976B065120264D0E00F04F71 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Alamofire.framework; sourceTree = "<group>"; };
 		976B0655202650CA00F04F71 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		976B06572026E56000F04F71 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		976C5471203DFB4100C42911 /* SourceListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceListCell.swift; sourceTree = "<group>"; };
 		976C5473203DFF3400C42911 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		9779EB42205DAF07003CF9FA /* FadeSegue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeSegue.swift; sourceTree = "<group>"; };
+		9779EB44205DB2D5003CF9FA /* DeveloperOptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeveloperOptionsViewController.swift; sourceTree = "<group>"; };
 		979F99C3203FDC1F00071509 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Regular.ttf"; path = "Fonts/Roboto-Regular.ttf"; sourceTree = "<group>"; };
 		979F99C5203FDC3000071509 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Bold.ttf"; path = "Fonts/Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		979F99C6203FDC3000071509 /* Roboto-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Thin.ttf"; path = "Fonts/Roboto-Thin.ttf"; sourceTree = "<group>"; };
@@ -135,9 +134,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9779EB46205DB5BC003CF9FA /* TwitterShareExtensionUI.framework in Frameworks */,
 				974FA1AF2055DD700062FF9A /* SwiftyJSON.framework in Frameworks */,
-				974FA1B12055DD700062FF9A /* TwitterCore.framework in Frameworks */,
-				974FA1AD2055DD700062FF9A /* TwitterShareExtensionUI.framework in Frameworks */,
 				974FA1B62055DDFA0062FF9A /* Alamofire.framework in Frameworks */,
 				974FA1B32055DD700062FF9A /* TwitterKit.framework in Frameworks */,
 				974FA1BB2055E2E70062FF9A /* FeedKit.framework in Frameworks */,
@@ -208,7 +206,6 @@
 				97AADC232024263C00D08481 /* image.storyboard */,
 				97AADC262024263C00D08481 /* Info.plist */,
 				976B0649202570C200F04F71 /* SetupSourcesViewController.swift */,
-				976B064D202577F500F04F71 /* FadeSegue.swift */,
 				976B0655202650CA00F04F71 /* MainViewController.swift */,
 				976B06572026E56000F04F71 /* Images.xcassets */,
 				97BDC1E92028E9A600293E7B /* AddSourceTableViewCell.swift */,
@@ -218,6 +215,8 @@
 				971BD493203FCBAD00667CD2 /* MenuButton.swift */,
 				97B0B84C2059BB9000F3F420 /* SegueFromLeft.swift */,
 				97B0B84E2059BDF100F3F420 /* SettingsViewController.swift */,
+				9779EB42205DAF07003CF9FA /* FadeSegue.swift */,
+				9779EB44205DB2D5003CF9FA /* DeveloperOptionsViewController.swift */,
 			);
 			path = Funnel;
 			sourceTree = "<group>";
@@ -388,13 +387,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				976B064A202570C200F04F71 /* SetupSourcesViewController.swift in Sources */,
+				9779EB45205DB2D5003CF9FA /* DeveloperOptionsViewController.swift in Sources */,
 				97AADC1D2024263C00D08481 /* ViewController.swift in Sources */,
 				971BD494203FCBAD00667CD2 /* MenuButton.swift in Sources */,
 				97AADC1B2024263C00D08481 /* AppDelegate.swift in Sources */,
 				9752ACE4203F9ED300BE95BE /* PushNoAnimationSegue.swift in Sources */,
 				97B0B84D2059BB9100F3F420 /* SegueFromLeft.swift in Sources */,
 				976C5472203DFB4100C42911 /* SourceListCell.swift in Sources */,
-				976B064E202577F500F04F71 /* FadeSegue.swift in Sources */,
+				9779EB43205DAF07003CF9FA /* FadeSegue.swift in Sources */,
 				97BDC1EA2028E9A600293E7B /* AddSourceTableViewCell.swift in Sources */,
 				976C5474203DFF3400C42911 /* CardView.swift in Sources */,
 				976B0656202650CA00F04F71 /* MainViewController.swift in Sources */,

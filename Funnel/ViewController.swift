@@ -103,6 +103,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                             UserDefaults.standard.set(self.convertJson(json: JSON["social_media"] as! String), forKey: "social_media")
                             UserDefaults.standard.set(self.convertJson(json: JSON["news_sources"] as! String), forKey: "rss")
                             UserDefaults.standard.set(JSON["email"], forKey: "login_email")
+                            UserDefaults.standard.set(JSON["twt_key"], forKey: "twt_key")
                             UserDefaults.standard.synchronize()
                             self.mainView.alpha = 0
                             print("\((JSON["setup_complete"] as! NSString).doubleValue) -> 0.0 = \((JSON["setup_complete"] as! NSString).doubleValue == 0.0)")

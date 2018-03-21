@@ -17,6 +17,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
         print(url)
         if((url.absoluteString.range(of: "funnel://") == nil)) {
+            UserDefaults.standard.set(TWTRTwitter.sharedInstance().sessionStore.session()?.authToken, forKey: "twt_key")
+            UserDefaults.standard.synchronize()
+            print("Called")
             return TWTRTwitter.sharedInstance().application(app, open: url, options: options)
         } else {
             // Handle Instagram
