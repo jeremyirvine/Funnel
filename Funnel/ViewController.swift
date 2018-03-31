@@ -12,7 +12,7 @@ import TwitterKit
 import SwiftyJSON
 
 class ViewController: UIViewController, UITextFieldDelegate {
-
+    
     // Global Variables
     @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var loginView: UIView!
@@ -81,8 +81,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
             let password = signinPassword.text
             Alamofire.request("https://bamboo-us.com/ProjectFeed/login.php?u=\(username!)&p=\(password!)").validate().responseJSON { response in
                 switch response.result {
-                    case .failure(let err):
-                        print(err)
+                case .failure(let err):
+                    print(err)
                 case .success:
                     if let data = response.result.value {
                         print("Got Response!")
@@ -121,22 +121,22 @@ class ViewController: UIViewController, UITextFieldDelegate {
         } else if (currentInterface == "signupView") {
             Alamofire.request("https://bamboo-us.com/ProjectFeed/signup.php?p=\(self.signupPasswordField.text!.trimmingCharacters(in: .whitespacesAndNewlines))&n=\(self.signupNameField.text!.trimmingCharacters(in: .whitespacesAndNewlines))&u=\(self.signupEmailField.text!.trimmingCharacters(in: .whitespacesAndNewlines))").validate().responseJSON(completionHandler: { response in
                 switch response.result {
-                    case .failure(let err):
-                        print(err)
-                    case .success:
-                        if let data = response.result.value {
-                            let JSON = data as! NSDictionary
-                            let status = JSON["status"] as! String
-                            if status == "success" {
-                                UserDefaults.standard.set((JSON["key"] as! NSString).doubleValue, forKey: "login_key")
-                                UserDefaults.standard.set(self.signupNameField.text, forKey: "login_username")
-                                UserDefaults.standard.synchronize()
-                                
-                                self.performSegue(withIdentifier: "mainToSetup", sender: self)
-                            } else if status == "err_user_taken" {
-                                self.alert(msg: "That username has already been taken", title: "Error")
-                            }
+                case .failure(let err):
+                    print(err)
+                case .success:
+                    if let data = response.result.value {
+                        let JSON = data as! NSDictionary
+                        let status = JSON["status"] as! String
+                        if status == "success" {
+                            UserDefaults.standard.set((JSON["key"] as! NSString).doubleValue, forKey: "login_key")
+                            UserDefaults.standard.set(self.signupNameField.text, forKey: "login_username")
+                            UserDefaults.standard.synchronize()
+                            
+                            self.performSegue(withIdentifier: "mainToSetup", sender: self)
+                        } else if status == "err_user_taken" {
+                            self.alert(msg: "That username has already been taken", title: "Error")
                         }
+                    }
                 }
             })
         }

@@ -14,6 +14,73 @@ import TwitterKit
 import SwiftyJSON
 import SafariServices
 
+class ActivityViewController: UIViewController {
+    
+    private let activityView = ActivityView()
+    
+    init(message: String) {
+        super.init(nibName: nil, bundle: nil)
+        modalTransitionStyle = .crossDissolve
+        modalPresentationStyle = .overFullScreen
+        activityView.messageLabel.text = message
+        view = activityView
+    }
+    
+    required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+private class ActivityView: UIView {
+    
+    let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+    let boundingBoxView = UIView(frame: CGRect.zero)
+    let messageLabel = UILabel(frame: CGRect.zero)
+    
+    init() {
+        super.init(frame: CGRect.zero)
+        
+        backgroundColor = UIColor(white: 0.0, alpha: 0.5)
+        
+        boundingBoxView.backgroundColor = UIColor(white: 0.0, alpha: 0.5)
+        boundingBoxView.layer.cornerRadius = 12.0
+        
+        activityIndicatorView.startAnimating()
+        
+        messageLabel.font = UIFont.boldSystemFont(ofSize: UIFont.labelFontSize)
+        messageLabel.textColor = UIColor.white
+        messageLabel.textAlignment = .center
+        messageLabel.shadowColor = UIColor.black
+        messageLabel.shadowOffset = CGSize(width: 0.0, height: 1.0)
+        messageLabel.numberOfLines = 0
+        
+        addSubview(boundingBoxView)
+        addSubview(activityIndicatorView)
+        addSubview(messageLabel)
+    }
+    
+    required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        boundingBoxView.frame.size.width = 160.0
+        boundingBoxView.frame.size.height = 200.0
+        boundingBoxView.frame.origin.x = ceil((bounds.width / 2.0) - (boundingBoxView.frame.width / 2.0))
+        boundingBoxView.frame.origin.y = ceil((bounds.height / 2.0) - (boundingBoxView.frame.height / 2.0))
+        
+        activityIndicatorView.frame.origin.x = ceil((bounds.width / 2.0) - (activityIndicatorView.frame.width / 2.0))
+        activityIndicatorView.frame.origin.y = ceil((bounds.height / 2.0) - (activityIndicatorView.frame.height / 2.0)) - 20
+        
+        let messageLabelSize = messageLabel.sizeThatFits(CGSize(width: 160.0 - 20.0 * 2.0, height: CGFloat.greatestFiniteMagnitude))
+        messageLabel.frame.size.width = messageLabelSize.width
+        messageLabel.frame.size.height = messageLabelSize.height
+        messageLabel.frame.origin.x = ceil((bounds.width / 2.0) - (messageLabel.frame.width / 2.0))
+        messageLabel.frame.origin.y = ceil(activityIndicatorView.frame.origin.y + activityIndicatorView.frame.size.height + ((boundingBoxView.frame.height - activityIndicatorView.frame.height) / 4.0) - (messageLabel.frame.height / 2.0))
+    }
+}
 
 class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     @IBOutlet weak var titleLbl: UILabel!
@@ -83,6 +150,8 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                 print("Got Key:", token)
             }
         } else {
+            let activitiyViewController = ActivityViewController(message: "Setting up your account...")
+            present(activitiyViewController, animated: true, completion: nil)
             print("Saving Data...\n \(defaults)")
             let btn = sender as! UIButton
             btn.isEnabled = false
@@ -95,12 +164,12 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                     ud.set(socialMediaData, forKey: "social")
                     ud.set(defaults, forKey: "rss")
                     ud.synchronize()
-
+                    
                     var twt_key = ""
                     if let twt_key_s = ud.string(forKey: "twt_key") {
                         twt_key = twt_key_s
                     }
-                    if let twt_key_st = TWTRTwitter.sharedInstance().sessionStore.session()?.authToken {
+                    if let twt_key_st = TWTRTwitter.sharedInstance().sessionStore.session()?.userID {
                         ud.set(twt_key_st, forKey: "twt_key")
                         ud.synchronize()
                         twt_key = twt_key_st
@@ -367,46 +436,32 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                 case "instagram":
                     print("Searching Instagram...")
                     if let token = UserDefaults.standard.string(forKey: "instaKey") as? String {
-                    print("Token:", UserDefaults.standard.string(forKey: "instaKey")!)
-                    Alamofire.request("https://api.instagram.com/v1/users/search?q=\(textField.text!)&access_token=\(token)").responseJSON { response in
-                        print("Response")
-                        if let data = response.result.value as? [String: Any] {
-                            print("Data")
-                            if let searchItems = data["data"] as? [Any] {
-                                var sa: [String] = []
-                                var sid: [String] = []
-                                if(searchItems.count >= 1) {
-                                    for inc in 0...searchItems.count - 1 {
-                                        let iter = searchItems[inc] as! [String: Any]
-                                        print(iter["username"])
-                                        sa.append(iter["username"] as! String)
-                                        sid.append(iter["id"] as! String)
+                        print("Token:", UserDefaults.standard.string(forKey: "instaKey")!)
+                        Alamofire.request("https://api.instagram.com/v1/users/search?q=\(textField.text!)&access_token=\(token)").responseJSON { response in
+                            print("Response")
+                            if let data = response.result.value as? [String: Any] {
+                                print("Data")
+                                print(data)
+                                if let searchItems = data["data"] as? [Any] {
+                                    var sa: [String] = []
+                                    var sid: [String] = []
+                                    if(searchItems.count >= 1) {
+                                        for inc in 0...searchItems.count - 1 {
+                                            let iter = searchItems[inc] as! [String: Any]
+                                            print(iter["username"])
+                                            sa.append(iter["username"] as! String)
+                                            sid.append(iter["id"] as! String)
+                                        }
+                                    }
+                                    self.socialMediaSort = sa
+                                    self.specialIDList = sid
+                                    DispatchQueue.main.async {
+                                        self.rssTable.reloadData()
+                                        self.rssTable.frame.size.height = self.getTableSizeForSocialMedia()
                                     }
                                 }
-                                self.socialMediaSort = sa
-                                self.specialIDList = sid
-                                DispatchQueue.main.async {
-                                    self.rssTable.reloadData()
-                                    self.rssTable.frame.size.height = self.getTableSizeForSocialMedia()
-                                }
-//                                var sa: [String] = []
-//                                var sid: [String] = []
-//                                if(searchItems.count != 0) {
-//                                    for inc in 0...searchItems.count - 1 {
-//                                        print(searchItems[inc]["username"])
-//                                        sa.append(searchItems[inc]["username"]!)
-//                                        sid.append(searchItems[inc]["id"]!)
-//                                    }
-//                                }
-//                                self.socialMediaSort = sa
-//                                self.specialIDList = sid
-//                                DispatchQueue.main.async {
-//                                    self.rssTable.reloadData()
-//                                    self.rssTable.frame.size.height = self.getTableSizeForSocialMedia()
-//                                }
                             }
                         }
-                    }
                     } else {
                         let sfvc = SFSafariViewController(url: URL(string: "https://api.instagram.com/oauth/authorize/?client_id=c393eb225cd542d0ab0d2f1e9257f7de&redirect_uri=https://bamboo-us.com/ProjectFeed/token.php&response_type=token")!)
                         self.present(sfvc, animated: true, completion: nil)
@@ -436,45 +491,48 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                     
                 case "twitter":
                     print("Searching Twitter...")
-                    if let userID = TWTRTwitter.sharedInstance().sessionStore.session()?.userID {
-                        
-                        let client = TWTRAPIClient(userID: userID)
-                        // make requests with client
-                        let statusesShowEndpoint = "https://api.twitter.com/1.1/users/search.json"
-                        let params = ["q": textField.text!]
-                        var clientError : NSError?
-                        
-                        let request = client.urlRequest(withMethod: "GET", urlString: statusesShowEndpoint, parameters: params, error: &clientError)
-                        
-                        client.sendTwitterRequest(request) { (response, data, connectionError) -> Void in
-                            if connectionError != nil {
-                                print("Error: \(String(describing: connectionError))")
-                            }
+                    
+                    if let userID = UserDefaults.standard.string(forKey: "twt_key") {
+                        print("Twitter_Key Exists")
+                        if let uid = userID as? String {
+                            let client = TWTRAPIClient(userID: userID)
+                            // make requests with client
+                            let statusesShowEndpoint = "https://api.twitter.com/1.1/users/search.json"
+                            let params = ["q": textField.text!]
+                            var clientError : NSError?
                             
-                            do {
-                                if let json = try JSONSerialization.jsonObject(with: data!, options: []) as? [Any]  {
-                                print("-- data --")
-                                if(json.count - 1 > 0) {
-                                    self.socialMediaSort = []
-                                    for index in 0...json.count - 1 {
-                                        let indexed = json[index] as! [String: Any]
-                                        
-                                        print("\(String(describing: indexed["screen_name"]))")
-                                        self.socialMediaSort.append(indexed["screen_name"] as! String)
+                            let request = client.urlRequest(withMethod: "GET", urlString: statusesShowEndpoint, parameters: params, error: &clientError)
+                            
+                            client.sendTwitterRequest(request) { (response, data, connectionError) -> Void in
+                                if connectionError != nil {
+                                    print("Error: \(String(describing: connectionError))")
+                                }
+                                
+                                do {
+                                    if let json = try JSONSerialization.jsonObject(with: data!, options: []) as? [Any]  {
+                                        print("-- data --")
+                                        if(json.count - 1 > 0) {
+                                            self.socialMediaSort = []
+                                            for index in 0...json.count - 1 {
+                                                let indexed = json[index] as! [String: Any]
+                                                
+                                                print("\(String(describing: indexed["screen_name"]))")
+                                                self.socialMediaSort.append(indexed["screen_name"] as! String)
+                                            }
+                                        } else if(json.count == 1) {
+                                            let indexed = json[0] as! [String: Any]
+                                            
+                                            self.socialMediaSort = [indexed["screen_name"] as! String];
+                                            
+                                        }
+                                        DispatchQueue.main.async {
+                                            self.rssTable.reloadData()
+                                            self.rssTable.frame.size.height = self.getTableSizeForSocialMedia()
+                                        }
                                     }
-                                } else if(json.count == 1) {
-                                    let indexed = json[0] as! [String: Any]
-                                    
-                                    self.socialMediaSort = [indexed["screen_name"] as! String];
-                                    
+                                } catch let jsonError as NSError {
+                                    print("json error: \(jsonError.localizedDescription)")
                                 }
-                                DispatchQueue.main.async {
-                                    self.rssTable.reloadData()
-                                    self.rssTable.frame.size.height = self.getTableSizeForSocialMedia()
-                                }
-                            }
-                            } catch let jsonError as NSError {
-                                print("json error: \(jsonError.localizedDescription)")
                             }
                         }
                     }

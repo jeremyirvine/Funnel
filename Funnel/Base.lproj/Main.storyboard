@@ -323,6 +323,13 @@
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
+                                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wue-6Q-oDM">
+                                                            <rect key="frame" x="0.0" y="0.0" width="294" height="146"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                            <connections>
+                                                                <action selector="didTouchCell:" destination="KhA-y9-n0P" eventType="touchUpInside" id="M2k-oJ-Yda"/>
+                                                            </connections>
+                                                        </button>
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <userDefinedRuntimeAttributes>
@@ -367,6 +374,68 @@
                                     <action selector="menuBtnPressed:" destination="BzW-3e-TEG" eventType="touchUpInside" id="WgY-Jc-dme"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hv7-I4-moP">
+                                <rect key="frame" x="320" y="79" width="320" height="489"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cb7-w4-nYY">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="489"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="News Source Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TJg-LT-Aja">
+                                                <rect key="frame" x="52" y="15" width="106" height="21"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="12"/>
+                                                <color key="textColor" red="0.34509803921568627" green="0.34509803921568627" blue="0.34509803921568627" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Unknown_Image" translatesAutoresizingMaskIntoConstraints="NO" id="Luc-hY-Jqb">
+                                                <rect key="frame" x="19" y="13" width="25" height="25"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="“When the user clicks on an article preview in the main feed, they will be able to view the full article simply by tapping it”" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AU5-ks-Ucz">
+                                                <rect key="frame" x="19" y="46" width="175" height="64"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" name="Roboto-Medium" family="Roboto" pointSize="12"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Unknown_Image" translatesAutoresizingMaskIntoConstraints="NO" id="dlM-C8-K0N">
+                                                <rect key="frame" x="202" y="15" width="100" height="100"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            </imageView>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="kbC-Fc-JwP">
+                                                <rect key="frame" x="19" y="123" width="283" height="358"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <mutableString key="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque tincidunt enim sit amet enim iaculis convallis. Sed vulputate arcu ac odio viverra, quis varius neque efficitur. Nunc ante leo, facilisis ac mattis vitae, porttitor eget neque. Morbi hendrerit elementum lacinia. Ut bibendum arcu sit amet nulla cursus rhoncus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Phasellus cursus tristique bibendum. 
+
+Praesent vestibulum ex lacus, sit amet pharetra eros ornare id. Aliquam finibus purus eu libero blandit, id rhoncus arcu ultricies. Praesent suscipit ex eu lacus malesuada sodales. Phasellus quis pellentesque urna. Morbi sem ipsum, cursus ut iaculis sed, auctor sit amet felis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Pellentesque placerat imperdiet ante, id blandit nulla sodales quis. Curabitur id ante ac enim vehicula facilisis eu ac purus.
+
+Suspendisse ut fringilla risus. Morbi massa magna, volutpat lacinia leo eu, porta faucibus ante. Nam pretium mattis ligula eget ornare. Mauris id lectus a elit rutrum efficitur. Etiam dictum dui quis justo lacinia, eu luctus eros gravida. Morbi vel pretium lectus, et rutrum orci. Fusce et iaculis eros, finibus cursus urna.
+
+Pellentesque accumsan congue ligula a consequat. Aliquam ultricies nisi et est venenatis placerat. Mauris maximus elementum ornare. Sed gravida libero quis lacinia dictum. Nunc tristique nulla et urna venenatis sodales. Nunc sed purus et felis maximus pharetra. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum malesuada, urna eu accumsan mollis, est dolor rhoncus sapien, non fermentum metus lacus ut sem. Sed feugiat ultricies aliquam. Donec lorem eros, commodo commodo neque a, consectetur volutpat ligula. Nunc fermentum tellus non dui scelerisque pharetra.
+
+Nam interdum sem tortor, in porta lorem lacinia dignissim. Curabitur nisl nulla, malesuada eget ex a, mattis condimentum libero. Donec non ex id tellus egestas efficitur at eget nisl. Sed vel erat a ligula mattis semper sed at metus. Etiam pellentesque, magna nec aliquam porta, justo libero efficitur sem, sed commodo sem lectus eget urna. Maecenas sollicitudin placerat convallis. Nulla imperdiet magna sit amet libero elementum, ac vestibulum mi maximus. Integer eget luctus lacus. Sed et sollicitudin tellus, vitae venenatis ligula. Fusce purus odio, tincidunt quis faucibus eget, lobortis sit amet elit.
+
+Ut vitae gravida turpis. Proin nec est eu tellus ultrices varius at in nulla. Cras eget neque ut mi congue tristique. Aliquam in sodales ante, eu viverra lacus. Vivamus mi massa, vestibulum a euismod ac, finibus et nulla. Praesent aliquam dolor non sem aliquet, ac tincidunt dolor tempus. Nunc tellus augue, rhoncus sit amet scelerisque at, pretium sed est. Cras pulvinar malesuada egestas.
+
+Duis luctus massa et ipsum varius, maximus pharetra metus luctus. Sed dignissim porta interdum. Pellentesque fermentum rutrum purus nec consectetur. Suspendisse porttitor sagittis tempor. Maecenas tincidunt ultrices diam, id laoreet erat semper ut. Mauris quis nulla ut massa malesuada rhoncus in at metus. Mauris rhoncus lacus fringilla quam pellentesque, id porta ex porta. Nulla facilisi. Fusce aliquam neque et dignissim semper. Etiam accumsan cursus dictum. In non rutrum mauris. Phasellus augue tortor, tempus et enim ac, interdum varius nunc. Proin vitae massa quis dolor iaculis elementum. Aliquam et orci blandit sapien tempor consequat sit amet non turpis.
+
+Proin pharetra malesuada elit, eget rutrum est elementum sit amet. Curabitur egestas velit a neque accumsan, viverra pharetra nisi luctus. Sed sit amet tellus sem. Nam convallis neque lorem, eget pulvinar neque tincidunt sit amet. Nunc consequat enim a pretium fermentum. Vestibulum posuere tincidunt leo sit amet porttitor. Nulla posuere sapien sed est pharetra consectetur. Donec ut mattis dui. Donec finibus, leo a imperdiet vehicula, purus justo gravida lectus, vitae venenatis ex orci id ipsum. Donec id velit a lectus fermentum bibendum. Fusce nec mollis tellus, eu rhoncus dui. Suspendisse sit amet tincidunt ligula.
+
+Mauris aliquet in dolor vel faucibus. Aliquam laoreet nisi eu dui consequat bibendum. Proin at diam nec risus dignissim condimentum nec sit amet turpis. Nunc libero felis, interdum vitae felis rutrum, pellentesque egestas lacus. Mauris ut nunc magna. Cras sit amet purus vel odio pellentesque rhoncus eu id elit. Duis eu urna enim.
+
+In euismod felis leo, id gravida sem feugiat in. Quisque mattis ac massa nec malesuada. Nulla dapibus eu velit in gravida. Integer lacinia ante eros, ut pulvinar enim rhoncus ut. Sed vehicula lacus ut venenatis fringilla. Phasellus vitae rutrum orci, condimentum faucibus mi. Sed mollis gravida dui, nec consequat leo ullamcorper a.
+
+Ut dapibus elit ut aliquam euismod. Fusce vitae mattis dui. Praesent non suscipit arcu. Suspendisse porttitor nunc id risus pretium rutrum. Fusce cursus lacinia purus, vel cursus ex pharetra a. Praesent ipsum risus, interdum quis metus a, iaculis accumsan quam. Nullam quis aliquet augue. Etiam laoreet, nulla eget varius accumsan, ligula dolor condimentum metus, sit amet dictum risus nisi quis nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur velit odio, rutrum id dui eget, rhoncus ullamcorper erat. In fringilla aliquet sem, non tincidunt nisl consequat scelerisque. Aliquam quis tellus eu nunc varius ullamcorper ac in nisi. Sed mollis molestie augue, non porttitor ex tristique in. Phasellus vitae augue id ante fermentum porttitor nec dignissim libero. Fusce sit amet vestibulum sapien, sit amet lobortis justo.</mutableString>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                            </textView>
+                                        </subviews>
+                                    </scrollView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="f6b-fx-b2n">
                                 <rect key="frame" x="120" y="-1" width="200" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -437,7 +506,15 @@
                                     </imageView>
                                 </subviews>
                             </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xNh-QE-QjY">
+                            <button opaque="NO" alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="leI-Ax-NHk">
+                                <rect key="frame" x="16" y="44" width="17" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="ic_arrow_back_white_48pt_3x"/>
+                                <connections>
+                                    <action selector="show_backButtonPressed:" destination="BzW-3e-TEG" eventType="touchUpInside" id="sbU-fW-Pwj"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xNh-QE-QjY">
                                 <rect key="frame" x="120" y="-1" width="200" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.14999999999999999" colorSpace="calibratedRGB"/>
@@ -446,6 +523,11 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <gestureRecognizers/>
                         <viewLayoutGuide key="safeArea" id="3Bw-fC-m9l"/>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="xNh-QE-QjY"/>
+                            </mask>
+                        </variation>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="Sxu-EA-wx4" appends="YES" id="Nd6-Zc-wbe"/>
                         </connections>
@@ -453,10 +535,14 @@
                     <connections>
                         <outlet property="SlideMenuView" destination="xNh-QE-QjY" id="9rt-9r-nad"/>
                         <outlet property="backgroundView" destination="a9g-in-U1i" id="cYr-dM-lKb"/>
+                        <outlet property="funnelTitle" destination="9gV-To-bdH" id="cyS-20-tee"/>
                         <outlet property="menuBtn" destination="DRe-AC-w00" id="ZLX-8A-Ftp"/>
                         <outlet property="menuFeedBtn" destination="J1a-wF-gZG" id="2E8-X0-20Q"/>
                         <outlet property="menuSettingsBtn" destination="Rqv-oJ-Suc" id="qMR-KG-Aab"/>
                         <outlet property="menuSourcesBtn" destination="2hm-3p-E0j" id="yCZ-V9-D9Q"/>
+                        <outlet property="showContentView" destination="hv7-I4-moP" id="vUK-nx-SSx"/>
+                        <outlet property="show_backButton" destination="leI-Ax-NHk" id="9rf-O4-aa4"/>
+                        <outlet property="show_sourceName" destination="TJg-LT-Aja" id="DJI-HH-RAb"/>
                         <outlet property="slideMenuContainer" destination="f6b-fx-b2n" id="act-II-WPg"/>
                         <outlet property="sourcesTable" destination="6Jp-UJ-AxZ" id="wDS-bR-3fg"/>
                         <segue destination="fmb-Gj-rIc" kind="presentation" identifier="mainToSettings" id="xS3-Fi-Str"/>
@@ -736,6 +822,14 @@
                                     <action selector="resetSetupComplete:" destination="k9D-gP-b3M" eventType="touchUpInside" id="RSy-MD-fkd"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gco-MK-VRJ">
+                                <rect key="frame" x="88" y="134" width="145" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Test Setting_Up Alert"/>
+                                <connections>
+                                    <action selector="testAlert:" destination="k9D-gP-b3M" eventType="touchUpInside" id="aKO-gg-PkQ"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <viewLayoutGuide key="safeArea" id="RW0-yb-PC9"/>
@@ -824,7 +918,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MGa-Wn-PQe">
-                                                    <rect key="frame" x="12" y="9" width="27" height="25"/>
+                                                    <rect key="frame" x="12" y="9" width="27" height="24"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                     <state key="normal" image="instagram icon enabled"/>
                                                     <connections>
@@ -832,7 +926,7 @@
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d1m-Aq-tg5">
-                                                    <rect key="frame" x="45" y="9" width="28" height="25"/>
+                                                    <rect key="frame" x="45" y="9" width="28" height="24"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                                     <state key="normal" image="facebook icon disabled"/>
                                                     <connections>
@@ -840,7 +934,7 @@
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J3s-G6-b0a">
-                                                    <rect key="frame" x="81" y="9" width="24" height="25"/>
+                                                    <rect key="frame" x="81" y="9" width="24" height="24"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                                     <state key="normal" image="twitter icon disabled"/>
                                                     <connections>
@@ -852,15 +946,15 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="select network label" translatesAutoresizingMaskIntoConstraints="NO" id="3Dr-Sk-Ipb">
-                                                    <rect key="frame" x="144" y="17" width="168" height="17"/>
+                                                    <rect key="frame" x="144" y="16" width="168" height="17"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lI4-mm-Z40">
-                                                    <rect key="frame" x="274" y="9" width="25" height="25"/>
+                                                    <rect key="frame" x="274" y="9" width="25" height="24"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wPQ-1r-P5h">
-                                                    <rect key="frame" x="111" y="9" width="17" height="25"/>
+                                                    <rect key="frame" x="111" y="9" width="17" height="24"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                                     <state key="normal" image="reddit icon disabled"/>
                                                     <connections>
@@ -933,6 +1027,6 @@
         <image name="twitter icon disabled" width="25" height="21"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="g5r-9r-uet"/>
+        <segue reference="FVY-xv-yde"/>
     </inferredMetricsTieBreakers>
 </document>

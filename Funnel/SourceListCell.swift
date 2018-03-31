@@ -15,6 +15,7 @@ class SourceListCell: UITableViewCell {
     @IBOutlet weak var articleTitle: UILabel!
     @IBOutlet weak var articlePreview: UILabel!
     @IBOutlet weak var articlePreviewImg: UIImageView!
+    var id = 0
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -22,6 +23,9 @@ class SourceListCell: UITableViewCell {
         icon.layer.cornerRadius = icon.frame.height / 2
     }
 
+    @IBAction func didTouchCell(_ sender: Any) {
+        NotificationCenter.default.post(name: Notification.Name("handleTouch"), object: nil, userInfo: ["id": id])
+    }
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(false, animated: animated)
         

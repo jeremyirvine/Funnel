@@ -10,8 +10,14 @@ import UIKit
 import TwitterKit
 import Alamofire
 
+
+
 class DeveloperOptionsViewController: UIViewController {
 
+    @IBAction func testAlert(_ sender: Any) {
+        let activitiyViewController = ActivityViewController(message: "Setting up your account...")
+        present(activitiyViewController, animated: true, completion: nil)
+    }
     @IBAction func resetUserDefaultsPressed(_ sender: Any) {
         for (key, value) in UserDefaults.standard.dictionaryRepresentation() {
             print("removing \(key)...")

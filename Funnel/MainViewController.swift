@@ -31,9 +31,23 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var menuFeedBtn: UIButton!
     @IBOutlet weak var menuSourcesBtn: UIButton!
     @IBOutlet weak var menuSettingsBtn: UIButton!
+    @IBOutlet weak var showContentView: UIView!
+    @IBOutlet weak var funnelTitle: UILabel!
+    
+    // Minified Show Content View
+    @IBOutlet weak var show_sourceName: UILabel!
+    @IBOutlet weak var show_backButton: UIButton!
     
     var shouldLogout = false
     
+    @IBAction func show_backButtonPressed(_ sender: Any) {
+        UIView.animate(withDuration: slideMenuSpeed, animations: {
+            self.sourcesTable.frame.origin.x = 0
+            self.showContentView.frame.origin.x = self.showContentView.frame.width
+            self.funnelTitle.alpha = 1
+            self.show_backButton.alpha = 0
+        })
+    }
     @IBAction func unwindToMenu(segue: UIStoryboardSegue) {
         let src = segue.source
         let dst = segue.destination
@@ -50,6 +64,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         )
     }
     
+   
+    
     var slideMode = "closed"
     
     let slideMenuSpeed: Double = 0.2
@@ -57,6 +73,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     var imageNames: [String: String] = [:]
     
     var sources: [[String]] = []
+    let fb_access_token = "1885818195082007|ml3-08MDaLy3ZfUqUh4THDg99Wo".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
     
     @IBAction func menuFeedBtnPressed(_ sender: Any) {
     }
@@ -70,9 +87,33 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         return sources.count
     }
     
+    @objc func handleDidTouch(notif: Notification) {
+        if(slideMode == "closed") {
+            let id = notif.userInfo!["id"] as! Int
+            print(sources[id][1])
+            UIView.animate(withDuration: slideMenuSpeed, animations: {
+                self.sourcesTable.frame.origin.x = -self.sourcesTable.frame.width
+                self.showContentView.frame.origin.x = 0
+                self.funnelTitle.alpha = 0
+                self.show_backButton.alpha = 1
+            })
+        } else {
+            slideMode = "closed"
+            UIView.animate(withDuration: slideMenuSpeed) {
+                self.blurEffectView?.frame.origin.x = self.view.frame.width
+                self.SlideMenuView.frame.origin.x = self.view.frame.width
+                self.slideMenuContainer.frame.origin.x = self.view.frame.width
+            }
+        }
+    }
+    
     func getDocumentsDirectory() -> URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return paths[0]
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("Selected Post:", sources[indexPath.row])
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -80,6 +121,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             cell.articlePreview.text = sources[indexPath.row][1]
             cell.articleTitle.text = sources[indexPath.row][0]
             cell.sourceName.text = sources[indexPath.row][4]
+            cell.id = indexPath.row
             cell.icon.frame.size.width = 25
             cell.icon.frame.size.height = 25
             if(sources[indexPath.row][4] == "twitter") {
@@ -120,6 +162,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
 //
 //                    }
 //                }
+            } else if (sources[indexPath.row][2] == "facebook") {
+                cell.icon.image = UIImage(named: "facebook icon enabled")
+                cell.articlePreviewImg.isHidden = true
             } else {
                 cell.icon.layer.cornerRadius = cell.icon.frame.height / 2
             if imageNames.contains(where: {$0.key == sources[indexPath.row][2]}) {
@@ -153,6 +198,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
         return cell
     }
+    
     
     func setSources() {
         let ud = UserDefaults.standard
@@ -199,7 +245,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             })
         }
         
-//        print(socialData)
+        print(socialData)
         socialData.forEach { (source) in
             print(source[0])
             if(source[1] == "twitter") {
@@ -207,6 +253,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                 grabSocial(twtr_id: source[0])
             } else if (source[1] == "reddit") {
                 grabSocial(reddit_id: source[0])
+            } else if (source[1] == "facebook") {
+                grabSocial(facebook_id: source[2])
             }
         }
         sources.sort(by: {$0[0] > $1[0]})
@@ -221,6 +269,28 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         // 2: Source Thumbnail Url?
         // 3: Article Thumbnail Url?
         // 4: Source Name
+    }
+    func grabSocial(facebook_id: String) {
+        print("Getting social for fb-" + facebook_id)
+        var url = "https://graph.facebook.com/v2.12/" + facebook_id
+        url = url + "?access_token=" + fb_access_token! + "&fields=name,id,posts"
+        Alamofire.request(url).responseJSON { (response) in
+            if let data = response.result.value {
+                let json = JSON(data)
+                print(json["posts"]["data"][0])
+                for i in 0...json["posts"]["data"].count - 1 {
+                    let name = json["name"]
+                    let id = json["posts"]["data"][i]["id"]
+                    let created_tiem = json["posts"]["data"][i]["created_time"]
+                    let message = json["posts"]["data"][i]["message"]
+                    self.sources.append([name.string!, message.string!, "facebook", "nope", "facebook"])
+                    DispatchQueue.main.async {
+                        self.sourcesTable.reloadData()
+                    }
+                }
+                
+            }
+        }
     }
     
     func grabSocial(reddit_id: String) {
@@ -270,20 +340,19 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func grabSocial(twtr_id: String) {
         print("Getting social for \(twtr_id)...")
-        let ud = UserDefaults.standard
-        if let userID = UserDefaults.standard.string(forKey: "twt_key") as? String{
-            print("Got ID: \(userID)")
+        if let userID = UserDefaults.standard.string(forKey: "twt_key") {
+            print("Got ID: \(TWTRTwitter.sharedInstance().sessionStore.session()?.userID)")
             let client = TWTRAPIClient(userID: userID)
             let parameter : [String : Any] = ["screen_name" : twtr_id , "count" : "10" as AnyObject]
-            print("Params: \(parameter)")
             let req = client.urlRequest(withMethod: "GET", urlString: "https://api.twitter.com/1.1/statuses/user_timeline.json", parameters: parameter, error: nil)
+            print("Req_URL: \(req.value(forHTTPHeaderField: "auth_token"))")
             NSURLConnection.sendAsynchronousRequest(req, queue: .main, completionHandler: { (response, data, error) in
                 if error != nil {
                     print(error?.localizedDescription)
                 } else {
 //                    print("Got Social Response: ")
                     SwiftyJSON.JSON(data).forEach({ (post) in
-                        print(post.1)
+//                        print(post.1)
                         let text = post.1["text"]
                         self.sources.append([twtr_id, text.rawString()!, "twitter", "nope", "twitter"])
                         DispatchQueue.main.async {
@@ -312,6 +381,11 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var backgroundView: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.handleDidTouch),
+            name: NSNotification.Name("handleTouch"),
+            object: nil)
         let gesture = UITapGestureRecognizer(target: self, action:  #selector(self.closeDrawer))
         self.sourcesTable.addGestureRecognizer(gesture)
         
