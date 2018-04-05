@@ -11,6 +11,7 @@ import TwitterKit
 import FeedKit
 import SwiftyJSON
 import Alamofire
+import WebKit
 
 extension Date
 {
@@ -33,14 +34,23 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var menuSettingsBtn: UIButton!
     @IBOutlet weak var showContentView: UIView!
     @IBOutlet weak var funnelTitle: UILabel!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     // Minified Show Content View
     @IBOutlet weak var show_sourceName: UILabel!
     @IBOutlet weak var show_backButton: UIButton!
+    @IBOutlet weak var show_contentImage: UIImageView!
+    @IBOutlet weak var show_sourceImage: UIImageView!
+    @IBOutlet weak var show_contentTitle: UILabel!
+    @IBOutlet weak var show_contentText: UITextView!
+    @IBOutlet weak var show_webView: UIWebView!
     
     var shouldLogout = false
     
     @IBAction func show_backButtonPressed(_ sender: Any) {
+        DispatchQueue.main.async {
+            self.show_webView.loadHTMLString("", baseURL: nil)
+        }
         UIView.animate(withDuration: slideMenuSpeed, animations: {
             self.sourcesTable.frame.origin.x = 0
             self.showContentView.frame.origin.x = self.showContentView.frame.width
@@ -88,15 +98,128 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     @objc func handleDidTouch(notif: Notification) {
+    
+        // Schema:
+        // 0: Article Title
+        // 1: Preview Content
+        // 2: Source Thumbnail Url?
+        // 3: Article Thumbnail Url?
+        // 4: Source Name
+        
+        self.show_sourceImage.layer.cornerRadius = self.show_contentImage.frame.size.width / 2
+        self.show_webView.isHidden = true
+        
         if(slideMode == "closed") {
-            let id = notif.userInfo!["id"] as! Int
-            print(sources[id][1])
-            UIView.animate(withDuration: slideMenuSpeed, animations: {
-                self.sourcesTable.frame.origin.x = -self.sourcesTable.frame.width
-                self.showContentView.frame.origin.x = 0
-                self.funnelTitle.alpha = 0
-                self.show_backButton.alpha = 1
-            })
+            if(UserDefaults.standard.bool(forKey: "simpleFeed")) {
+                
+                let id = notif.userInfo!["id"] as! Int
+                print(sources[id][1])
+                UIView.animate(withDuration: slideMenuSpeed, animations: {
+                    self.sourcesTable.frame.origin.x = -self.sourcesTable.frame.width
+                    self.show_sourceName.text = self.sources[id][4]
+                    self.show_contentTitle.text = self.sources[id][0]
+                    self.show_contentText.text = self.sources[id][1]
+                    if self.imageNames.contains(where: {$0.key == self.sources[id][3]}) {
+                        let imageURL = self.getDocumentsDirectory().appendingPathComponent(self.imageNames[self.sources[id][3]]! + ".png")
+                        let image    = UIImage(contentsOfFile: imageURL.path)
+                        self.show_contentImage.image = image
+                    } else {
+                        self.show_contentImage.image  = UIImage(named: "Unkown_Image")
+                    }
+                    // Set source image
+                    switch self.sources[id][2] {
+                        case "twitter":
+                            self.show_sourceImage.layer.cornerRadius = 0
+                            self.show_sourceImage.image = UIImage(named: "twitter icon enabled")
+                            self.show_sourceImage.frame.size.width = 25
+                            break
+                        case "instagram":
+                            self.show_sourceImage.layer.cornerRadius = 0
+                            self.show_sourceImage.image = UIImage(named: "instagram icon enabled")
+                            self.show_sourceImage.frame.size.width = 25
+                            break
+                        case "reddit":
+                            self.show_contentImage.layer.cornerRadius = 0
+                            self.show_sourceImage.image = UIImage(named: "reddit icon red")
+                            self.show_sourceImage.frame.size.width = 18
+                            break
+                        case "facebook":
+                            self.show_sourceImage.layer.cornerRadius = 0
+                            self.show_sourceImage.image = UIImage(named: "facebook icon enabled")
+                            self.show_sourceImage.frame.size.width = 25
+                            break
+                        default:
+                            self.show_sourceImage.frame.size.width = 25
+                            self.show_sourceImage.layer.cornerRadius = self.show_sourceImage.frame.size.width / 2
+                            if self.imageNames.contains(where: {$0.key == self.sources[id][2]}) {
+                                let imageURL = self.getDocumentsDirectory().appendingPathComponent(self.imageNames[self.sources[id][2]]! + ".png")
+                                let image    = UIImage(contentsOfFile: imageURL.path)
+                                self.show_sourceImage.image = image
+                            }  else {
+                                do {
+                                    if let url = URL(string: self.sources[id][2]) {
+                                        if let data = try? Data(contentsOf: url) {
+                                            if let source = UIImage(data: data) {
+                                                self.show_sourceImage.image = source
+                                                if let data = UIImagePNGRepresentation(source) {
+                                                    let nonce = UUID().uuidString
+                                                    self.imageNames[self.sources[id][2]] = nonce
+                                                    let filename = self.getDocumentsDirectory().appendingPathComponent(nonce + ".png")
+                                                    try? data.write(to: filename)
+                                                }
+                                            } else {
+                                                self.show_sourceImage.image = UIImage(named: "Unkown_Image")
+                                            }
+                                        } else {
+                                            self.show_sourceImage.image = UIImage(named: "Unkown_Image")
+                                        }
+                                    } else {
+                                        self.show_sourceImage.image = UIImage(named: "Unknown_Image")
+                                    }
+                                    
+                                }
+                            }
+                            break
+                    }
+                    self.showContentView.frame.origin.x = 0
+                    self.funnelTitle.alpha = 0
+                    self.show_backButton.alpha = 1
+                })
+            } else {
+                UIView.animate(withDuration: slideMenuSpeed, animations: {
+                    let id = notif.userInfo!["id"] as! Int
+                    self.show_webView.isHidden = false
+                    self.sourcesTable.frame.origin.x = -self.sourcesTable.frame.width
+                    self.showContentView.frame.origin.x = 0
+                    self.funnelTitle.alpha = 0
+                    self.show_backButton.alpha = 1
+                    if(self.sources[id][2] == "reddit") {
+                        self.show_webView.loadHTMLString("", baseURL: nil)
+                        self.show_webView.loadRequest(URLRequest(url: URL(string: self.sources[id][5])!))
+                    } else if (self.sources[id][4] == "twitter") {
+                        self.show_webView.loadHTMLString("", baseURL: nil)
+                        self.show_webView.loadRequest(URLRequest(url: URL(string: self.sources[id][5])!))
+                    } else if (self.sources[id][4] == "facebook") {
+                        self.show_webView.loadHTMLString("", baseURL: nil)
+                        self.show_webView.loadRequest(URLRequest(url: URL(string: self.sources[id][5])!))
+                    } else {
+                        self.show_webView.loadHTMLString("", baseURL: nil)
+                        self.show_webView.loadRequest(URLRequest(url: URL(string: self.sources[id][6])!))
+                    }
+//                    switch self.sources[id][6] {
+//                        case "reddit":
+//                            self.show_webView.loadHTMLString("", baseURL: nil)
+//                            self.show_webView.loadRequest(URLRequest(url: URL(string: self.sources[id][5])!))
+//                            break;
+//                        case "twitter":
+//                            break
+//                        default:
+//                            self.show_webView.loadHTMLString("", baseURL: nil)
+//                            self.show_webView.loadRequest(URLRequest(url: URL(string: self.sources[id][6])!))
+//                            break
+//                    }
+                })
+            }
         } else {
             slideMode = "closed"
             UIView.animate(withDuration: slideMenuSpeed) {
@@ -117,6 +240,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+            print("Processing Cell...")
             let cell = tableView.dequeueReusableCell(withIdentifier: "sourceCell", for: indexPath) as! SourceListCell
             cell.articlePreview.text = sources[indexPath.row][1]
             cell.articleTitle.text = sources[indexPath.row][0]
@@ -167,6 +291,35 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                 cell.articlePreviewImg.isHidden = true
             } else {
                 cell.icon.layer.cornerRadius = cell.icon.frame.height / 2
+                if imageNames.contains(where: {$0.key == sources[indexPath.row][3]}) {
+                    let imageURL = getDocumentsDirectory().appendingPathComponent(imageNames[sources[indexPath.row][3]]! + ".png")
+                    let image    = UIImage(contentsOfFile: imageURL.path)
+                    cell.articlePreviewImg.image = image
+                } else {
+                        do {
+                            if let url = URL(string: sources[indexPath.row][3]) {
+                                if let data = try? Data(contentsOf: url) {
+                                    if let source = UIImage(data: data) {
+                                        cell.articlePreviewImg.image = source
+                                        if let data = UIImagePNGRepresentation(source) {
+                                            let nonce = UUID().uuidString
+                                            imageNames[sources[indexPath.row][3]] = nonce
+                                            let filename = getDocumentsDirectory().appendingPathComponent(nonce + ".png")
+                                            try? data.write(to: filename)
+                                        }
+                                    } else {
+                                        cell.articlePreviewImg.image = UIImage(named: "Unkown_Image")
+                                    }
+                                } else {
+                                    cell.articlePreviewImg.image = UIImage(named: "Unkown_Image")
+                                }
+                            } else {
+                                cell.articlePreviewImg.image = UIImage(named: "Unknown_Image")
+                            }
+
+                        }
+                }
+
             if imageNames.contains(where: {$0.key == sources[indexPath.row][2]}) {
                 let imageURL = getDocumentsDirectory().appendingPathComponent(imageNames[sources[indexPath.row][2]]! + ".png")
                 let image    = UIImage(contentsOfFile: imageURL.path)
@@ -218,29 +371,29 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
 //                    print(entry.)
                     let str = entry.content?.contentEncoded?.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil).replacingOccurrences(of: "\n", with: "")
                     print(entry.dublinCore?.dcCreator)
-                    self.sources.append([entry.title!, str!, (result.rssFeed?.image?.url!) ?? "", "nope", source[0]])
-                    DispatchQueue.main.async {
-                        self.sources.sort(by: {$0[0] > $1[0]})
-                        self.sourcesTable.reloadData()
-                    }
+                    self.sources.append([entry.title!, str!, (result.rssFeed?.image?.url!) ?? "", "nope", source[0], (entry.pubDate?.toString(dateFormat: "MM-dd-yyy"))!, entry.link!])
+//                    DispatchQueue.main.async {
+//                        self.sources.sort(by: {$0[0] > $1[0]})
+//                        self.sourcesTable.reloadData()
+//                    }
                 })
                 result.atomFeed?.entries?.forEach({ (entry) in
                     let str = entry.content?.value?.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil).replacingOccurrences(of: "\n", with: "")
                     let date = entry.published
-                    self.sources.append([entry.title!, str!, (result.atomFeed?.icon)!, "nope", source[0], (date?.toString(dateFormat: "MM-dd-yyy"))!])
-                    DispatchQueue.main.async {
-                        self.sources.sort(by: {$0[0] > $1[0]})
-                        self.sourcesTable.reloadData()
-                    }
+                    self.sources.append([entry.title!, str!, (result.atomFeed?.icon)!, "nope", source[0], (date?.toString(dateFormat: "MM-dd-yyy"))!, (entry.links?.first?.attributes?.href)!])
+//                    DispatchQueue.main.async {
+//                        self.sources.sort(by: {$0[0] > $1[0]})
+//                        self.sourcesTable.reloadData()
+//                    }
                 })
                 result.jsonFeed?.items?.forEach({ (entry) in
                     let str = entry.contentText
                     let date = entry.datePublished
-                    self.sources.append([entry.title!, str!, (result.jsonFeed?.icon)!, "nope", source[0], (date?.toString(dateFormat: "MM-dd-yyy"))!])
-                    DispatchQueue.main.async {
-                        self.sources.sort(by: {$0[0] > $1[0]})
-                        self.sourcesTable.reloadData()
-                    }
+                    self.sources.append([entry.title!, str!, (result.jsonFeed?.icon)!, "nope", source[0], (date?.toString(dateFormat: "MM-dd-yyy"))!, String(describing: entry.url)])
+//                    DispatchQueue.main.async {
+//                        self.sources.sort(by: {$0[0] > $1[0]})
+//                        self.sourcesTable.reloadData()
+//                    }
                 })
             })
         }
@@ -269,6 +422,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         // 2: Source Thumbnail Url?
         // 3: Article Thumbnail Url?
         // 4: Source Name
+        // 5 (optional): URL
     }
     func grabSocial(facebook_id: String) {
         print("Getting social for fb-" + facebook_id)
@@ -285,7 +439,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                     let message = json["posts"]["data"][i]["message"]
                     self.sources.append([name.string!, message.string!, "facebook", "nope", "facebook"])
                     DispatchQueue.main.async {
-                        self.sourcesTable.reloadData()
+                        self.activityIndicator.isHidden = true
+//                        self.sourcesTable.reloadData()
                     }
                 }
                 
@@ -306,11 +461,12 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                     let title = arr.1["data"]["title"].string!
                     let thumbnail = arr.1["data"]["thumbnail"].string!
                     let author = arr.1["data"]["author"].string!
-                    self.sources.append([author, title, "reddit", thumbnail, "reddit (" + reddit_id + ")"])
+                    self.sources.append([author, title, "reddit", thumbnail, "reddit (" + reddit_id + ")", "https://www.reddit.com" + arr.1["data"]["permalink"].string!])
                     if self.imageNames.contains(where: {$0.key == thumbnail}) {
                         DispatchQueue.main.async {
+                            self.activityIndicator.isHidden = true
                             self.sources.sort(by: {$0[0] > $1[0]})
-//                            self.sourcesTable.reloadData()
+                            self.sourcesTable.reloadData()
                         }
                        return
                     } else {
@@ -330,8 +486,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                         }
                     }
                     DispatchQueue.main.async {
+                        self.activityIndicator.isHidden = true
                         self.sources.sort(by: {$0[0] > $1[0]})
-//                        self.sourcesTable.reloadData()
+                        self.sourcesTable.reloadData()
                     }
                 })
             }
@@ -354,10 +511,16 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                     SwiftyJSON.JSON(data).forEach({ (post) in
 //                        print(post.1)
                         let text = post.1["text"]
-                        self.sources.append([twtr_id, text.rawString()!, "twitter", "nope", "twitter"])
+                        print(post.1["id"])
+                        var status: String = ""
+                        let id = post.1["id"].stringValue
+                        status = twtr_id + "/status/" + id
+//                        print(post.1)
+                        self.sources.append([twtr_id, text.rawString()!, "twitter", "nope", "twitter", "https://twitter.com/" + status])
                         DispatchQueue.main.async {
+//                            self.activityIndicator.isHidden = true
                             self.sources.sort(by: {$0[0] > $1[0]})
-                            self.sourcesTable.reloadData()
+//                            self.sourcesTable.reloadData()
                         }
                     })
                 }
@@ -381,6 +544,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var backgroundView: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
+        activityIndicator.startAnimating()
+        activityIndicator.isHidden = false
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(self.handleDidTouch),
@@ -404,7 +569,10 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         menuSourcesBtn.contentEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0)
         setSources()
 //        menuSettingsBtn.contentEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0)
-       
+        sources.sort(by: {$0[0] > $1[0]})
+        DispatchQueue.main.async {
+            self.sourcesTable.reloadData()
+        }
         // Do any additional setup after loading the view.
     }
     
@@ -471,11 +639,13 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @IBAction func menuBackBtnPressed(_ sender: Any) {
         slideMode = "closed"
+        
         UIView.animate(withDuration: slideMenuSpeed) {
             self.blurEffectView?.frame.origin.x = self.view.frame.width
             self.SlideMenuView.frame.origin.x = self.view.frame.width
             self.slideMenuContainer.frame.origin.x = self.view.frame.width
         }
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {

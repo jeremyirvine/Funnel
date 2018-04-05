@@ -229,8 +229,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
+        if(UserDefaults.standard.bool(forKey: "simpleFeed") == nil) {
+            UserDefaults.standard.set(false, forKey: "simpleFeed")
+        }
     }
 }
 

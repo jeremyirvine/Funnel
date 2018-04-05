@@ -273,6 +273,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="uOE-Km-ySF">
+                                <rect key="frame" x="150" y="274" width="20" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </activityIndicatorView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="funnelBG" translatesAutoresizingMaskIntoConstraints="NO" id="a9g-in-U1i">
                                 <rect key="frame" x="0.0" y="-1" width="320" height="80"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
@@ -400,14 +404,14 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Unknown_Image" translatesAutoresizingMaskIntoConstraints="NO" id="dlM-C8-K0N">
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Unknown_Image" translatesAutoresizingMaskIntoConstraints="NO" id="dlM-C8-K0N">
                                                 <rect key="frame" x="202" y="15" width="100" height="100"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             </imageView>
-                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="kbC-Fc-JwP">
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="kbC-Fc-JwP">
                                                 <rect key="frame" x="19" y="123" width="283" height="358"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <mutableString key="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque tincidunt enim sit amet enim iaculis convallis. Sed vulputate arcu ac odio viverra, quis varius neque efficitur. Nunc ante leo, facilisis ac mattis vitae, porttitor eget neque. Morbi hendrerit elementum lacinia. Ut bibendum arcu sit amet nulla cursus rhoncus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Phasellus cursus tristique bibendum. 
+                                                <string key="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque tincidunt enim sit amet enim iaculis convallis. Sed vulputate arcu ac odio viverra, quis varius neque efficitur. Nunc ante leo, facilisis ac mattis vitae, porttitor eget neque. Morbi hendrerit elementum lacinia. Ut bibendum arcu sit amet nulla cursus rhoncus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Phasellus cursus tristique bibendum. 
 
 Praesent vestibulum ex lacus, sit amet pharetra eros ornare id. Aliquam finibus purus eu libero blandit, id rhoncus arcu ultricies. Praesent suscipit ex eu lacus malesuada sodales. Phasellus quis pellentesque urna. Morbi sem ipsum, cursus ut iaculis sed, auctor sit amet felis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Pellentesque placerat imperdiet ante, id blandit nulla sodales quis. Curabitur id ante ac enim vehicula facilisis eu ac purus.
 
@@ -427,17 +431,22 @@ Mauris aliquet in dolor vel faucibus. Aliquam laoreet nisi eu dui consequat bibe
 
 In euismod felis leo, id gravida sem feugiat in. Quisque mattis ac massa nec malesuada. Nulla dapibus eu velit in gravida. Integer lacinia ante eros, ut pulvinar enim rhoncus ut. Sed vehicula lacus ut venenatis fringilla. Phasellus vitae rutrum orci, condimentum faucibus mi. Sed mollis gravida dui, nec consequat leo ullamcorper a.
 
-Ut dapibus elit ut aliquam euismod. Fusce vitae mattis dui. Praesent non suscipit arcu. Suspendisse porttitor nunc id risus pretium rutrum. Fusce cursus lacinia purus, vel cursus ex pharetra a. Praesent ipsum risus, interdum quis metus a, iaculis accumsan quam. Nullam quis aliquet augue. Etiam laoreet, nulla eget varius accumsan, ligula dolor condimentum metus, sit amet dictum risus nisi quis nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur velit odio, rutrum id dui eget, rhoncus ullamcorper erat. In fringilla aliquet sem, non tincidunt nisl consequat scelerisque. Aliquam quis tellus eu nunc varius ullamcorper ac in nisi. Sed mollis molestie augue, non porttitor ex tristique in. Phasellus vitae augue id ante fermentum porttitor nec dignissim libero. Fusce sit amet vestibulum sapien, sit amet lobortis justo.</mutableString>
+Ut dapibus elit ut aliquam euismod. Fusce vitae mattis dui. Praesent non suscipit arcu. Suspendisse porttitor nunc id risus pretium rutrum. Fusce cursus lacinia purus, vel cursus ex pharetra a. Praesent ipsum risus, interdum quis metus a, iaculis accumsan quam. Nullam quis aliquet augue. Etiam laoreet, nulla eget varius accumsan, ligula dolor condimentum metus, sit amet dictum risus nisi quis nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur velit odio, rutrum id dui eget, rhoncus ullamcorper erat. In fringilla aliquet sem, non tincidunt nisl consequat scelerisque. Aliquam quis tellus eu nunc varius ullamcorper ac in nisi. Sed mollis molestie augue, non porttitor ex tristique in. Phasellus vitae augue id ante fermentum porttitor nec dignissim libero. Fusce sit amet vestibulum sapien, sit amet lobortis justo.</string>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                             </textView>
                                         </subviews>
                                     </scrollView>
+                                    <webView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="B3j-eT-nVQ">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="489"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </webView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="f6b-fx-b2n">
-                                <rect key="frame" x="120" y="-1" width="200" height="568"/>
+                                <rect key="frame" x="320" y="-1" width="200" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rY2-pM-ldj">
@@ -506,34 +515,30 @@ Ut dapibus elit ut aliquam euismod. Fusce vitae mattis dui. Praesent non suscipi
                                     </imageView>
                                 </subviews>
                             </view>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xNh-QE-QjY">
+                                <rect key="frame" x="320" y="-1" width="200" height="568"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.14999999999999999" colorSpace="calibratedRGB"/>
+                            </view>
                             <button opaque="NO" alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="leI-Ax-NHk">
-                                <rect key="frame" x="16" y="44" width="17" height="22"/>
+                                <rect key="frame" x="0.0" y="31" width="59" height="49"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="ic_arrow_back_white_48pt_3x"/>
                                 <connections>
                                     <action selector="show_backButtonPressed:" destination="BzW-3e-TEG" eventType="touchUpInside" id="sbU-fW-Pwj"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xNh-QE-QjY">
-                                <rect key="frame" x="120" y="-1" width="200" height="568"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.14999999999999999" colorSpace="calibratedRGB"/>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <gestureRecognizers/>
                         <viewLayoutGuide key="safeArea" id="3Bw-fC-m9l"/>
-                        <variation key="default">
-                            <mask key="subviews">
-                                <exclude reference="xNh-QE-QjY"/>
-                            </mask>
-                        </variation>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="Sxu-EA-wx4" appends="YES" id="Nd6-Zc-wbe"/>
                         </connections>
                     </view>
                     <connections>
                         <outlet property="SlideMenuView" destination="xNh-QE-QjY" id="9rt-9r-nad"/>
+                        <outlet property="activityIndicator" destination="uOE-Km-ySF" id="9e8-X5-Z6W"/>
                         <outlet property="backgroundView" destination="a9g-in-U1i" id="cYr-dM-lKb"/>
                         <outlet property="funnelTitle" destination="9gV-To-bdH" id="cyS-20-tee"/>
                         <outlet property="menuBtn" destination="DRe-AC-w00" id="ZLX-8A-Ftp"/>
@@ -542,7 +547,12 @@ Ut dapibus elit ut aliquam euismod. Fusce vitae mattis dui. Praesent non suscipi
                         <outlet property="menuSourcesBtn" destination="2hm-3p-E0j" id="yCZ-V9-D9Q"/>
                         <outlet property="showContentView" destination="hv7-I4-moP" id="vUK-nx-SSx"/>
                         <outlet property="show_backButton" destination="leI-Ax-NHk" id="9rf-O4-aa4"/>
+                        <outlet property="show_contentImage" destination="dlM-C8-K0N" id="ma6-kw-76r"/>
+                        <outlet property="show_contentText" destination="kbC-Fc-JwP" id="R1Z-ld-4Gg"/>
+                        <outlet property="show_contentTitle" destination="AU5-ks-Ucz" id="YPO-DV-VoJ"/>
+                        <outlet property="show_sourceImage" destination="Luc-hY-Jqb" id="CRf-ft-7tj"/>
                         <outlet property="show_sourceName" destination="TJg-LT-Aja" id="DJI-HH-RAb"/>
+                        <outlet property="show_webView" destination="B3j-eT-nVQ" id="GaE-Ai-I58"/>
                         <outlet property="slideMenuContainer" destination="f6b-fx-b2n" id="act-II-WPg"/>
                         <outlet property="sourcesTable" destination="6Jp-UJ-AxZ" id="wDS-bR-3fg"/>
                         <segue destination="fmb-Gj-rIc" kind="presentation" identifier="mainToSettings" id="xS3-Fi-Str"/>
@@ -607,15 +617,15 @@ Ut dapibus elit ut aliquam euismod. Fusce vitae mattis dui. Praesent non suscipi
                                     <action selector="editPasswordPressed:" destination="fmb-Gj-rIc" eventType="touchUpInside" id="Hx3-Hr-0TB"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Show simplified RSS article instead of full webpage" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dUZ-SK-c8g">
-                                <rect key="frame" x="15" y="214" width="243" height="51"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Show simplified Feed article instead of full webpage" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dUZ-SK-c8g">
+                                <rect key="frame" x="15" y="214" width="239" height="58"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="AvenirNextCondensed-Regular" family="Avenir Next Condensed" pointSize="17"/>
                                 <color key="textColor" red="0.011764705882352941" green="0.011764705882352941" blue="0.011764705882352941" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6dF-jh-vmB">
-                                <rect key="frame" x="247" y="223" width="49" height="31"/>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="6dF-jh-vmB">
+                                <rect key="frame" x="248" y="223" width="49" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                             </switch>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xoN-iA-OVf">
@@ -764,6 +774,7 @@ Ut dapibus elit ut aliquam euismod. Fusce vitae mattis dui. Praesent non suscipi
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AuH-Is-F0f">
                                 <rect key="frame" x="247" y="0.0" width="73" height="80"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="34" maxX="0.0" maxY="0.0"/>
                                 <state key="normal" image="DismissArrow"/>
                                 <connections>
                                     <action selector="backBtnPressed:" destination="fmb-Gj-rIc" eventType="touchUpInside" id="m77-me-KSy"/>
@@ -774,6 +785,7 @@ Ut dapibus elit ut aliquam euismod. Fusce vitae mattis dui. Praesent non suscipi
                         <viewLayoutGuide key="safeArea" id="hbS-YM-3k9"/>
                     </view>
                     <connections>
+                        <outlet property="simpleFeedSwitch" destination="6dF-jh-vmB" id="dFo-Am-b6V"/>
                         <outlet property="usr_email" destination="gqi-3a-302" id="lSY-54-hff"/>
                         <outlet property="usr_img" destination="7TM-Wv-gyR" id="T2R-AC-cFd"/>
                         <outlet property="usr_name" destination="zEL-hH-khx" id="eh3-va-57l"/>
@@ -1027,6 +1039,6 @@ Ut dapibus elit ut aliquam euismod. Fusce vitae mattis dui. Praesent non suscipi
         <image name="twitter icon disabled" width="25" height="21"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="FVY-xv-yde"/>
+        <segue reference="g5r-9r-uet"/>
     </inferredMetricsTieBreakers>
 </document>

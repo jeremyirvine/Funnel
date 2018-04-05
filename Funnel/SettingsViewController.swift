@@ -12,7 +12,10 @@ class SettingsViewController: UIViewController {
     @IBOutlet weak var usr_img: UIImageView!
     @IBOutlet weak var usr_email: UILabel!
     @IBOutlet weak var usr_name: UILabel!
+    @IBOutlet weak var simpleFeedSwitch: UISwitch!
     @IBAction func backBtnPressed(_ sender: Any) {
+        print(simpleFeedSwitch.isOn)
+        UserDefaults.standard.set(simpleFeedSwitch.isOn, forKey: "simpleFeed")
         dismiss(animated: true, completion: nil)
     }
     var shouldLogout = false
@@ -83,9 +86,14 @@ class SettingsViewController: UIViewController {
         super.viewDidLoad()
         usr_img.layer.cornerRadius = 10
         shouldLogout = false
-        
+        simpleFeedSwitch.setOn(UserDefaults.standard.bool(forKey: "simpleFeed"), animated: false)
         usr_name.text = UserDefaults.standard.string(forKey: "login_username") ?? "John Doe"
         usr_email.text = UserDefaults.standard.string(forKey: "login_email") ?? "johndoe@gmail.com"
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+
+        super.viewDidAppear(animated)
     }
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
