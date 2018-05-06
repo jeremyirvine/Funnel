@@ -44,9 +44,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var show_contentTitle: UILabel!
     @IBOutlet weak var show_contentText: UITextView!
     @IBOutlet weak var show_webView: UIWebView!
+    @IBOutlet weak var limitedNetworkView: RoundedCornerView!
     
     var shouldLogout = false
-    
     @IBAction func show_backButtonPressed(_ sender: Any) {
         DispatchQueue.main.async {
             self.show_webView.loadHTMLString("", baseURL: nil)
@@ -558,6 +558,9 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         let blurEffect = UIBlurEffect(style: .regular)
         blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView?.frame = SlideMenuView.frame
+        self.SlideMenuView.frame.origin.x = self.view.frame.width
+        self.slideMenuContainer.frame.origin.x = self.view.frame.width
+        self.showContentView.frame.origin.x = self.view.frame.width
         view.addSubview(blurEffectView!)
         sourcesTable.delegate = self
         sourcesTable.dataSource = self
@@ -567,7 +570,10 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         slideMenuContainer.frame = SlideMenuView.frame
         menuFeedBtn.contentEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0)
         menuSourcesBtn.contentEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0)
-        setSources()
+        DispatchQueue.main.async {
+            self.setSources()
+        }
+        
 //        menuSettingsBtn.contentEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0)
         sources.sort(by: {$0[0] > $1[0]})
         DispatchQueue.main.async {

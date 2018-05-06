@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9714ED072087BA4B0030DC76 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9714ED062087BA490030DC76 /* Images.xcassets */; };
+		9714ED092087BA7E0030DC76 /* SourcesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9714ED082087BA7E0030DC76 /* SourcesViewController.swift */; };
+		9714ED0B2087C2D00030DC76 /* MenuSourcesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9714ED0A2087C2D00030DC76 /* MenuSourcesCell.swift */; };
 		971BD494203FCBAD00667CD2 /* MenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 971BD493203FCBAD00667CD2 /* MenuButton.swift */; };
 		974FA1AF2055DD700062FF9A /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 974FA1AA2055DD700062FF9A /* SwiftyJSON.framework */; };
 		974FA1B02055DD700062FF9A /* SwiftyJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 974FA1AA2055DD700062FF9A /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -17,9 +20,9 @@
 		974FA1BB2055E2E70062FF9A /* FeedKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 974FA1BA2055E2E70062FF9A /* FeedKit.framework */; };
 		974FA1BC2055E2E70062FF9A /* FeedKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 974FA1BA2055E2E70062FF9A /* FeedKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9752ACE4203F9ED300BE95BE /* PushNoAnimationSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9752ACE3203F9ED300BE95BE /* PushNoAnimationSegue.swift */; };
+		9763EE162083B74D0075912A /* RoundedCornerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9763EE152083B74D0075912A /* RoundedCornerView.swift */; };
 		976B064A202570C200F04F71 /* SetupSourcesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976B0649202570C200F04F71 /* SetupSourcesViewController.swift */; };
 		976B0656202650CA00F04F71 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976B0655202650CA00F04F71 /* MainViewController.swift */; };
-		976B06582026E56000F04F71 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 976B06572026E56000F04F71 /* Images.xcassets */; };
 		976C5472203DFB4100C42911 /* SourceListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976C5471203DFB4100C42911 /* SourceListCell.swift */; };
 		976C5474203DFF3400C42911 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976C5473203DFF3400C42911 /* CardView.swift */; };
 		9779EB43205DAF07003CF9FA /* FadeSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9779EB42205DAF07003CF9FA /* FadeSegue.swift */; };
@@ -85,6 +88,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		9714ED062087BA490030DC76 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		9714ED082087BA7E0030DC76 /* SourcesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcesViewController.swift; sourceTree = "<group>"; };
+		9714ED0A2087C2D00030DC76 /* MenuSourcesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuSourcesCell.swift; sourceTree = "<group>"; };
 		971BD493203FCBAD00667CD2 /* MenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuButton.swift; sourceTree = "<group>"; };
 		974FA1A92055DD700062FF9A /* TwitterShareExtensionUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TwitterShareExtensionUI.framework; path = Carthage/Build/iOS/TwitterShareExtensionUI.framework; sourceTree = "<group>"; };
 		974FA1AA2055DD700062FF9A /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/iOS/SwiftyJSON.framework; sourceTree = "<group>"; };
@@ -92,10 +98,10 @@
 		974FA1AC2055DD700062FF9A /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TwitterKit.framework; path = Carthage/Build/iOS/TwitterKit.framework; sourceTree = "<group>"; };
 		974FA1BA2055E2E70062FF9A /* FeedKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FeedKit.framework; path = Carthage/Build/iOS/FeedKit.framework; sourceTree = "<group>"; };
 		9752ACE3203F9ED300BE95BE /* PushNoAnimationSegue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNoAnimationSegue.swift; sourceTree = "<group>"; };
+		9763EE152083B74D0075912A /* RoundedCornerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCornerView.swift; sourceTree = "<group>"; };
 		976B0649202570C200F04F71 /* SetupSourcesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupSourcesViewController.swift; sourceTree = "<group>"; };
 		976B065120264D0E00F04F71 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Alamofire.framework; sourceTree = "<group>"; };
 		976B0655202650CA00F04F71 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
-		976B06572026E56000F04F71 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		976C5471203DFB4100C42911 /* SourceListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceListCell.swift; sourceTree = "<group>"; };
 		976C5473203DFF3400C42911 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		9779EB42205DAF07003CF9FA /* FadeSegue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeSegue.swift; sourceTree = "<group>"; };
@@ -200,6 +206,7 @@
 		97AADC192024263C00D08481 /* Funnel */ = {
 			isa = PBXGroup;
 			children = (
+				9714ED062087BA490030DC76 /* Images.xcassets */,
 				97AADC1A2024263C00D08481 /* AppDelegate.swift */,
 				97AADC1C2024263C00D08481 /* ViewController.swift */,
 				97AADC1E2024263C00D08481 /* Main.storyboard */,
@@ -207,7 +214,6 @@
 				97AADC262024263C00D08481 /* Info.plist */,
 				976B0649202570C200F04F71 /* SetupSourcesViewController.swift */,
 				976B0655202650CA00F04F71 /* MainViewController.swift */,
-				976B06572026E56000F04F71 /* Images.xcassets */,
 				97BDC1E92028E9A600293E7B /* AddSourceTableViewCell.swift */,
 				976C5471203DFB4100C42911 /* SourceListCell.swift */,
 				976C5473203DFF3400C42911 /* CardView.swift */,
@@ -217,6 +223,9 @@
 				97B0B84E2059BDF100F3F420 /* SettingsViewController.swift */,
 				9779EB42205DAF07003CF9FA /* FadeSegue.swift */,
 				9779EB44205DB2D5003CF9FA /* DeveloperOptionsViewController.swift */,
+				9763EE152083B74D0075912A /* RoundedCornerView.swift */,
+				9714ED082087BA7E0030DC76 /* SourcesViewController.swift */,
+				9714ED0A2087C2D00030DC76 /* MenuSourcesCell.swift */,
 			);
 			path = Funnel;
 			sourceTree = "<group>";
@@ -353,13 +362,13 @@
 				979F99DE203FDC5E00071509 /* Roboto-BoldItalic.ttf in Resources */,
 				979F99DF203FDC5E00071509 /* Roboto-Italic.ttf in Resources */,
 				979F99E0203FDC5E00071509 /* Roboto-Light.ttf in Resources */,
+				9714ED072087BA4B0030DC76 /* Images.xcassets in Resources */,
 				979F99E1203FDC5E00071509 /* Roboto-LightItalic.ttf in Resources */,
 				979F99E2203FDC5E00071509 /* Roboto-Medium.ttf in Resources */,
 				979F99E3203FDC5E00071509 /* Roboto-MediumItalic.ttf in Resources */,
 				979F99E4203FDC5E00071509 /* Roboto-Thin.ttf in Resources */,
 				979F99E5203FDC5E00071509 /* Roboto-ThinItalic.ttf in Resources */,
 				979F99E6203FDC5E00071509 /* Roboto-Regular.ttf in Resources */,
-				976B06582026E56000F04F71 /* Images.xcassets in Resources */,
 				97AADC252024263C00D08481 /* image.storyboard in Resources */,
 				97AADC202024263C00D08481 /* Main.storyboard in Resources */,
 			);
@@ -395,10 +404,13 @@
 				97B0B84D2059BB9100F3F420 /* SegueFromLeft.swift in Sources */,
 				976C5472203DFB4100C42911 /* SourceListCell.swift in Sources */,
 				9779EB43205DAF07003CF9FA /* FadeSegue.swift in Sources */,
+				9714ED0B2087C2D00030DC76 /* MenuSourcesCell.swift in Sources */,
 				97BDC1EA2028E9A600293E7B /* AddSourceTableViewCell.swift in Sources */,
 				976C5474203DFF3400C42911 /* CardView.swift in Sources */,
+				9714ED092087BA7E0030DC76 /* SourcesViewController.swift in Sources */,
 				976B0656202650CA00F04F71 /* MainViewController.swift in Sources */,
 				97B0B84F2059BDF100F3F420 /* SettingsViewController.swift in Sources */,
+				9763EE162083B74D0075912A /* RoundedCornerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

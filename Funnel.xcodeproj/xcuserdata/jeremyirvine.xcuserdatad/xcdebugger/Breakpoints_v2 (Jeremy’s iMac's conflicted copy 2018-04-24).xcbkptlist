@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Funnel/MainViewController.swift"
+            timestampString = "546224530.7679451"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "276"
+            endingLineNumber = "276"
+            landmarkName = "unknown"
+            landmarkType = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Funnel/MainViewController.swift"
+            timestampString = "546224530.768012"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "383"
+            endingLineNumber = "383"
+            landmarkName = "unknown"
+            landmarkType = "0">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (FeedKit.AtomFeedEntry) -&gt; () in closure #1 (FeedKit.Result) -&gt; () in closure #1 (Swift.Array&lt;Swift.String&gt;) -&gt; () in Funnel.MainViewController.setSources() -&gt; ()"
+                  moduleName = "Funnel"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jeremyirvine/Dropbox/Xcode_Projects/Funnel/Funnel/MainViewController.swift"
+                  timestampString = "544596788.1670851"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "352"
+                  endingLineNumber = "352"
+                  offsetFromSymbolStart = "1132">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (FeedKit.AtomFeedEntry) -&gt; () in closure #1 (FeedKit.Result) -&gt; () in closure #1 (Swift.Array&lt;Swift.String&gt;) -&gt; () in Funnel.MainViewController.setSources() -&gt; ()"
+                  moduleName = "Funnel"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jeremyirvine/Dropbox/Xcode_Projects/Funnel/Funnel/MainViewController.swift"
+                  timestampString = "544596788.168457"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "352"
+                  endingLineNumber = "352"
+                  offsetFromSymbolStart = "2516">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
