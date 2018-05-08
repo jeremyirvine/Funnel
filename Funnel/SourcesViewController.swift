@@ -8,6 +8,7 @@
 
 import UIKit
 import Alamofire
+import TwitterKit
 
 extension Array {
     func contains<T>(obj: T) -> Bool where T : Equatable {
@@ -20,14 +21,17 @@ extension Notification.Name {
     static let removeSourceItem = Notification.Name("removeSourceItem")
 }
 
-class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
     var table_data: [[String]] = []
     var search_data: [[String]] = []
     var rss: [[String]] = []
     var social: [[String]] = []
+    var table_time = 0
+    var table_f = false
     
     @IBAction func dismissPressed(_ sender: Any) {
+        UserDefaults.standard.set(self.social, forKey: "social")
         self.dismiss(animated: true)
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -39,6 +43,7 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func getIndexForObject(search: [[String]], obj: [String]) -> Int {
         for i in 0...search.count - 1 {
+            print(search[i], "->", obj)
             if(search[i] == obj) {
                 return i
             }
@@ -46,41 +51,12 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
         return -1
     }
     
-    @objc func removeItem(index: Notification) {
-        let item = index.userInfo!["index"] as! Int
-        print("removing \(item)...")
-        print(table_data.count)
-        if(table_data[item][0] != "rss") {
-            let indx = getIndexForObject(search: self.social, obj: table_data[item])
-            if(indx != -1) {
-                self.social.remove(at: indx)
-            } else {
-                print("FATAL: getIndexForObject @ removeItem(:index) has returned -1")
-            }
-            UserDefaults.standard.set(self.social, forKey: "social")
-            UserDefaults.standard.synchronize()
-        } else {
-            let indx = getIndexForObject(search: self.rss, obj: table_data[item])
-            self.rss.remove(at: indx)
-            UserDefaults.standard.set(self.rss, forKey: "rss")
-            UserDefaults.standard.synchronize()
-        }
-        table_data.remove(at: item)
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
     }
     
-    @objc func addItem(index: Notification) {
-        let item = index.userInfo!["index"] as! Int
-        table_data.append(search_data[item])
-        self.social.append([search_data[item][1], search_data[item][0]])
-        UserDefaults.standard.set(social, forKey: "social")
-        UserDefaults.standard.synchronize()
-        print("adding \(item)...")
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
+    func syncDB() {
         if let rssData = try? JSONSerialization.data(withJSONObject: rss, options: JSONSerialization.WritingOptions(rawValue: 0)) {
             if let socialData = try? JSONSerialization.data(withJSONObject: social, options: JSONSerialization.WritingOptions(rawValue: 0)) {
                 let rss = String(data: rssData, encoding: .utf8)?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
@@ -98,24 +74,70 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
+    @objc func removeItem(index: Notification) {
+        print(self.social)
+        let item = index.userInfo!["index"] as! Int
+        print("removing \(item)...")
+        print(table_data.count)
+        if(table_data[item][0] != "rss") {
+            let indx = getIndexForObject(search: self.social, obj: table_data[item])
+            if(indx != -1) {
+                self.social.remove(at: indx)
+                print(social)
+            } else {
+                print("FATAL: getIndexForObject @ removeItem(:index) has returned -1")
+            }
+            UserDefaults.standard.set(social, forKey: "social_media")
+            
+            print(UserDefaults.standard.object(forKey: "social_media") as! [[String]])
+        } else {
+            let indx = getIndexForObject(search: self.rss, obj: table_data[item])
+            self.rss.remove(at: indx)
+            UserDefaults.standard.set(self.rss, forKey: "rss")
+            UserDefaults.standard.synchronize()
+        }
+        table_data.remove(at: item)
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+        syncDB()
+    }
+    
+    @objc func addItem(index: Notification) {
+        let item = index.userInfo!["index"] as! Int
+        table_data.append(search_data[item])
+        self.social.append([search_data[item][0], search_data[item][1]])
+        var social_override: [[String]] = []
+        for i in 0...self.social.count - 1 {
+            social_override.append([social[i][0], social[i][1]])
+        }
+        UserDefaults.standard.set(social_override, forKey: "social_media")
+        UserDefaults.standard.synchronize()
+        print("adding \(item)...")
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+        syncDB()
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: MenuSourcesCell = tableView.dequeueReusableCell(withIdentifier: "sourceCell", for: indexPath) as! MenuSourcesCell
         
         if(tableState == "source") {
-            cell.txt?.text = table_data[indexPath.row][1]
-            cell.img?.image = UIImage(named: table_data[indexPath.row][0] + " icon gray")
+            cell.txt?.text = table_data[indexPath.row][0]
+            cell.img?.image = UIImage(named: table_data[indexPath.row][1] + " icon gray")
             cell.btn.setImage(UIImage(named: "ic_remove_circle_48pt_3x"), for: .normal)
             cell.btn_action = "remove"
             cell.btn_index = indexPath.row
         } else if (tableState == "search") {
-            cell.txt?.text = search_data[indexPath.row][1]
-            cell.img?.image = UIImage(named: search_data[indexPath.row][0] + " icon gray")
+            cell.txt?.text = search_data[indexPath.row][0]
+            cell.img?.image = UIImage(named: search_data[indexPath.row][1] + " icon gray")
             cell.btn.setImage(UIImage(named: "add_btn"), for: .normal)
             cell.btn_action = "add"
             cell.btn_index = indexPath.row
             var foundItem = false
             for i in 0...table_data.count - 1 {
-                if(table_data[i][1] == search_data[indexPath.row][1]) {
+                if(table_data[i] == search_data[indexPath.row]) {
                     foundItem = true
                     cell.btn_index = i
                 }
@@ -152,22 +174,26 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
         NotificationCenter.default.addObserver(self, selector: #selector(removeItem(index:)), name: .removeSourceItem, object: nil)
         tableView.delegate = self
         tableView.dataSource = self
-        let rssData = UserDefaults.standard.object(forKey: "rss") as! [[String]]
-        self.rss = rssData
-        for i in 0...rssData.count - 1 {
-            table_data.append(["rss", rssData[i][0]])
+        
+        DispatchQueue.main.async {
+            let rssData = UserDefaults.standard.object(forKey: "rss") as! [[String]]
+            self.rss = rssData
+            for i in 0...rssData.count - 1 {
+                self.table_data.append([rssData[i][0], "rss"])
+            }
+            let socialData = UserDefaults.standard.object(forKey: "social_media") as! [[String]]
+            print("DEBUG:", socialData)
+            self.social = socialData
+            if(socialData.count >= 1) {
+                for i in 0...socialData.count - 1 {
+                    self.table_data.append([socialData[i][0], socialData[i][1]])
+                }
+            }
         }
-        let socialData = UserDefaults.standard.object(forKey: "social_media") as! [[String]]
-        self.social = socialData
-        for i in 0...socialData.count - 1 {
-            table_data.append([socialData[i][1], socialData[i][0]])
-        }
+        
         
         searchField.addTarget(self, action: #selector(textFieldDidChange(textField:)), for: UIControlEvents.editingChanged)
-        
-        
-        print(rssData)
-        print(socialData)
+        searchField.delegate = self
     }
     
     func reloadTable() {
@@ -175,13 +201,14 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     @objc func textFieldDidChange(textField: UITextField) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { // change 2 to desired number of seconds
-            if(textField.text != "") {
+        let txt = textField.text
+        DispatchQueue.global(qos: .background).async {
+            if(txt != "") {
                 self.tableState = "search"
                 
                 switch self.btnPressed {
                 case self.TWITTER:
-                    
+                    self.searchTwitter(str: txt!)
                     break
                 case self.FACEBOOK:
                     
@@ -190,7 +217,7 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
                     
                     break
                 case self.REDDIT:
-                    self.searchReddit(str: self.searchField.text!)
+                    self.searchReddit(str: txt!)
                     break
                 case "rss":
                     
@@ -202,35 +229,62 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
             } else {
                 self.tableState = "source"
             }
-            self.reloadTable()
-        }
-        if(textField.text != "") {
-            tableState = "search"
-            
-            switch btnPressed {
-                case TWITTER:
-                    
-                    break
-                case FACEBOOK:
-                    
-                    break
-                case INSTAGRAM:
-                    
-                    break
-                case REDDIT:
-                    searchReddit(str: searchField.text!)
-                    break
-                case "rss":
-                    
-                    break
-                default:
-                    print("FATAL: Invalid Button State '" + btnPressed + "' @ SourcesViewController")
-                    break
+            DispatchQueue.main.async {
+                
+                self.reloadTable()
             }
-        } else {
-            tableState = "source"
         }
-        reloadTable()
+    }
+    
+    func searchTwitter(str: String) {
+        self.search_data = []
+        if let userID = UserDefaults.standard.string(forKey: "twt_key") {
+            print("Twitter_Key Exists")
+            if let uid = userID as? String {
+                let client = TWTRAPIClient(userID: userID)
+                // make requests with client
+                let statusesShowEndpoint = "https://api.twitter.com/1.1/users/search.json"
+                let params = ["q": str]
+                var clientError : NSError?
+                
+                let request = client.urlRequest(withMethod: "GET", urlString: statusesShowEndpoint, parameters: params, error: &clientError)
+                
+                client.sendTwitterRequest(request) { (response, data, connectionError) -> Void in
+                    if connectionError != nil {
+                        print("Error: \(String(describing: connectionError))")
+                    }
+                    do {
+                        if let json = try JSONSerialization.jsonObject(with: data!, options: []) as? [Any]  {
+                            print("-- data --")
+                            print(json.count)
+                            print(json)
+                            if(json.count - 1 > 0) {
+                                
+                                for index in 0...json.count - 1 {
+                                    let indexed = json[index] as! [String: Any]
+                                    
+                                    print("\(String(describing: indexed["screen_name"]))")
+                                    self.search_data.append([String(describing: indexed["screen_name"]!), "twitter"])
+                                    DispatchQueue.main.async {
+                                        self.tableView.reloadData()
+                                    }
+                                }
+                                
+                            } else if(json.count == 1) {
+                                let indexed = json[0] as! [String: Any]
+                                print("\(String(describing: indexed["screen_name"]))")
+                                self.search_data.append([String(describing: indexed["screen_name"]!), "twitter"])
+                                DispatchQueue.main.async {
+                                    self.tableView.reloadData()
+                                }
+                            }
+                        }
+                    } catch let jsonError as NSError {
+                        print("json error: \(jsonError.localizedDescription)")
+                    }
+                }
+            }
+        }
     }
     
     func searchReddit(str: String) {
@@ -245,7 +299,10 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
                 if let data = response.result.value as? [String] {
                     if(data.count != 0) {
                         for i in 0...data.count - 1 {
-                            self.search_data.append(["reddit", data[i]])
+                            self.search_data.append([data[i], "reddit"])
+                            DispatchQueue.main.async {
+                                self.tableView.reloadData()
+                            }
                             print(data[i])
                         }
                     }

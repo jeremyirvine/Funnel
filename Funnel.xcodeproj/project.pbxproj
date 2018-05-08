@@ -213,10 +213,10 @@
 				97AADC232024263C00D08481 /* image.storyboard */,
 				97AADC262024263C00D08481 /* Info.plist */,
 				976B0649202570C200F04F71 /* SetupSourcesViewController.swift */,
+				976C5473203DFF3400C42911 /* CardView.swift */,
 				976B0655202650CA00F04F71 /* MainViewController.swift */,
 				97BDC1E92028E9A600293E7B /* AddSourceTableViewCell.swift */,
 				976C5471203DFB4100C42911 /* SourceListCell.swift */,
-				976C5473203DFF3400C42911 /* CardView.swift */,
 				9752ACE3203F9ED300BE95BE /* PushNoAnimationSegue.swift */,
 				971BD493203FCBAD00667CD2 /* MenuButton.swift */,
 				97B0B84C2059BB9000F3F420 /* SegueFromLeft.swift */,
@@ -331,7 +331,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 97AADC122024263C00D08481 /* Build configuration list for PBXProject "Funnel" */;
+			buildConfigurationList = 97AADC122024263C00D08481 /* Build configuration list for PBXProject "funnel" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -677,7 +677,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		97AADC122024263C00D08481 /* Build configuration list for PBXProject "Funnel" */ = {
+		97AADC122024263C00D08481 /* Build configuration list for PBXProject "funnel" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				97AADC3D2024263C00D08481 /* Debug */,

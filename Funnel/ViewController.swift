@@ -182,7 +182,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         self.mainView.alpha = 1
         self.loginView.alpha = 1
         if(UserDefaults.standard.string(forKey: "login_key") != nil && UserDefaults.standard.string(forKey: "login_key") != "") {
-            print("hi")
             if UserDefaults.standard.double(forKey: "setup_complete") == 1.0 {
                 self.performSegue(withIdentifier: "menuToMain", sender: self)
             } else {
@@ -193,6 +192,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
             self.mainView.alpha = 0
             self.loginView.alpha = 0
             self.signupView.alpha = 0
+            DispatchQueue.main.asyncAfter(deadline: .now() + 4.0, execute: {
+                let ac = UIAlertController(title: "Error", message: "It appears your internet connection is too slow or unavailable to access one or more of your sources, please try again later", preferredStyle: .alert)
+                self.present(ac, animated: true, completion: nil)
+            })
             
         } else {
             self.loginView.frame.origin.x = self.loginView.frame.width

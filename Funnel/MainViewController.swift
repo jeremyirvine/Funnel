@@ -44,7 +44,8 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var show_contentTitle: UILabel!
     @IBOutlet weak var show_contentText: UITextView!
     @IBOutlet weak var show_webView: UIWebView!
-    @IBOutlet weak var limitedNetworkView: RoundedCornerView!
+    
+    var requesting = false
     
     var shouldLogout = false
     @IBAction func show_backButtonPressed(_ sender: Any) {
@@ -364,55 +365,59 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
            
             print("URL:", source[1])
             let parser = FeedParser(URL: feedurl!)
-            parser?.parseAsync(result: { (result) in
-                print("Success")
-                print(result.error?.localizedDescription)
-                result.rssFeed?.items?.forEach({ (entry) in
-//                    print(entry.)
-                    let str = entry.content?.contentEncoded?.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil).replacingOccurrences(of: "\n", with: "")
-                    print(entry.dublinCore?.dcCreator)
-                    self.sources.append([entry.title!, str!, (result.rssFeed?.image?.url!) ?? "", "nope", source[0], (entry.pubDate?.toString(dateFormat: "MM-dd-yyy"))!, entry.link!])
-//                    DispatchQueue.main.async {
-//                        self.sources.sort(by: {$0[0] > $1[0]})
-//                        self.sourcesTable.reloadData()
-//                    }
+            DispatchQueue.global(qos: .background).async {
+                parser?.parseAsync(result: { (result) in
+                    print("Success")
+                    print(result.error?.localizedDescription)
+                    result.rssFeed?.items?.forEach({ (entry) in
+    //                    print(entry.)
+                        let str = entry.content?.contentEncoded?.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil).replacingOccurrences(of: "\n", with: "")
+                        print(entry.dublinCore?.dcCreator)
+                        self.sources.append([entry.title!, str!, (result.rssFeed?.image?.url!) ?? "", "nope", source[0], (entry.pubDate?.toString(dateFormat: "MM-dd-yyy"))!, entry.link!])
+    //                    DispatchQueue.main.async {
+    //                        self.sources.sort(by: {$0[0] > $1[0]})
+    //                        self.sourcesTable.reloadData()
+    //                    }
+                    })
+                    result.atomFeed?.entries?.forEach({ (entry) in
+                        let str = entry.content?.value?.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil).replacingOccurrences(of: "\n", with: "")
+                        let date = entry.published
+                        self.sources.append([entry.title!, str!, (result.atomFeed?.icon)!, "nope", source[0], (date?.toString(dateFormat: "MM-dd-yyy"))!, (entry.links?.first?.attributes?.href)!])
+    //                    DispatchQueue.main.async {
+    //                        self.sources.sort(by: {$0[0] > $1[0]})
+    //                        self.sourcesTable.reloadData()
+    //                    }
+                    })
+                    result.jsonFeed?.items?.forEach({ (entry) in
+                        let str = entry.contentText
+                        let date = entry.datePublished
+                        self.sources.append([entry.title!, str!, (result.jsonFeed?.icon)!, "nope", source[0], (date?.toString(dateFormat: "MM-dd-yyy"))!, String(describing: entry.url)])
+    //                    DispatchQueue.main.async {
+    //                        self.sources.sort(by: {$0[0] > $1[0]})
+    //                        self.sourcesTable.reloadData()
+    //                    }
+                    })
                 })
-                result.atomFeed?.entries?.forEach({ (entry) in
-                    let str = entry.content?.value?.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil).replacingOccurrences(of: "\n", with: "")
-                    let date = entry.published
-                    self.sources.append([entry.title!, str!, (result.atomFeed?.icon)!, "nope", source[0], (date?.toString(dateFormat: "MM-dd-yyy"))!, (entry.links?.first?.attributes?.href)!])
-//                    DispatchQueue.main.async {
-//                        self.sources.sort(by: {$0[0] > $1[0]})
-//                        self.sourcesTable.reloadData()
-//                    }
-                })
-                result.jsonFeed?.items?.forEach({ (entry) in
-                    let str = entry.contentText
-                    let date = entry.datePublished
-                    self.sources.append([entry.title!, str!, (result.jsonFeed?.icon)!, "nope", source[0], (date?.toString(dateFormat: "MM-dd-yyy"))!, String(describing: entry.url)])
-//                    DispatchQueue.main.async {
-//                        self.sources.sort(by: {$0[0] > $1[0]})
-//                        self.sourcesTable.reloadData()
-//                    }
-                })
-            })
+            }
         }
         
         print(socialData)
-        socialData.forEach { (source) in
-            print(source[0])
-            if(source[1] == "twitter") {
-                print()
-                grabSocial(twtr_id: source[0])
-            } else if (source[1] == "reddit") {
-                grabSocial(reddit_id: source[0])
-            } else if (source[1] == "facebook") {
-                grabSocial(facebook_id: source[2])
+        DispatchQueue.global(qos: .background).async {
+            socialData.forEach { (source) in
+                print(source[0])
+                if(source[1] == "twitter") {
+                    print()
+                    self.grabSocial(twtr_id: source[0])
+                } else if (source[1] == "reddit") {
+                    self.grabSocial(reddit_id: source[0])
+                } else if (source[1] == "facebook") {
+                    self.grabSocial(facebook_id: source[2])
+                }
             }
-        }
-        sources.sort(by: {$0[0] > $1[0]})
-        DispatchQueue.main.async {
-            self.sourcesTable.reloadData()
+            self.sources.sort(by: {$0[0] > $1[0]})
+            DispatchQueue.main.async {
+                self.sourcesTable.reloadData()
+            }
         }
         
         
@@ -440,59 +445,64 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                     self.sources.append([name.string!, message.string!, "facebook", "nope", "facebook"])
                     DispatchQueue.main.async {
                         self.activityIndicator.isHidden = true
-//                        self.sourcesTable.reloadData()
+                        self.sourcesTable.reloadData()
                     }
                 }
                 
             }
         }
+        self.requesting = false
     }
     
     func grabSocial(reddit_id: String) {
-//        print("Getting social for https://reddit.com/\(reddit_id)/new.json?sort=new")
         let url = "https://reddit.com/\(reddit_id)/new.json?sort=new"
-        Alamofire.request(url).responseJSON { response in
-            if((response.result.value) != nil) {
-                let swiftyJsonVar = JSON(response.result.value!)
-//                print(swiftyJsonVar["data"]["children"][0]["data"]["title"])
-                let children = swiftyJsonVar["data"]["children"]
-                children.forEach({ (arr) in
-//                    print(arr.1["data"]["title"])
-                    let title = arr.1["data"]["title"].string!
-                    let thumbnail = arr.1["data"]["thumbnail"].string!
-                    let author = arr.1["data"]["author"].string!
-                    self.sources.append([author, title, "reddit", thumbnail, "reddit (" + reddit_id + ")", "https://www.reddit.com" + arr.1["data"]["permalink"].string!])
-                    if self.imageNames.contains(where: {$0.key == thumbnail}) {
-                        DispatchQueue.main.async {
-                            self.activityIndicator.isHidden = true
-                            self.sources.sort(by: {$0[0] > $1[0]})
-                            self.sourcesTable.reloadData()
-                        }
-                       return
-                    } else {
-                        do {
-                            if let url = URL(string: thumbnail) {
-                                if let data = try? Data(contentsOf: url) {
-                                    if let source = UIImage(data: data) {
-                                        if let data = UIImagePNGRepresentation(source) {
-                                            let nonce = UUID().uuidString
-                                            self.imageNames[thumbnail] = nonce
-                                            let filename = self.getDocumentsDirectory().appendingPathComponent(nonce + ".png")
-                                            try? data.write(to: filename)
+        print("Getting Social for r/" + reddit_id)
+        DispatchQueue.global(qos: .background).async {
+            Alamofire.request(url).responseJSON { response in
+                if((response.result.value) != nil) {
+                    let swiftyJsonVar = JSON(response.result.value!)
+    //                print(swiftyJsonVar["data"]["children"][0]["data"]["title"])
+                    let children = swiftyJsonVar["data"]["children"]
+                    children.forEach({ (arr) in
+    //                    print(arr.1["data"]["title"])
+                        let title = arr.1["data"]["title"].string!
+                        let thumbnail = arr.1["data"]["thumbnail"].string!
+                        let author = arr.1["data"]["author"].string!
+                        self.sources.append([author, title, "reddit", thumbnail, "reddit (" + reddit_id + ")", "https://www.reddit.com" + arr.1["data"]["permalink"].string!])
+                        if self.imageNames.contains(where: {$0.key == thumbnail}) {
+                            DispatchQueue.main.async {
+                                self.activityIndicator.isHidden = true
+                                self.sources.sort(by: {$0[0] > $1[0]})
+                                self.sourcesTable.reloadData()
+                                
+                            }
+                           return
+                        } else {
+                            do {
+                                if let url = URL(string: thumbnail) {
+                                    if let data = try? Data(contentsOf: url) {
+                                        if let source = UIImage(data: data) {
+                                            if let data = UIImagePNGRepresentation(source) {
+                                                let nonce = UUID().uuidString
+                                                self.imageNames[thumbnail] = nonce
+                                                let filename = self.getDocumentsDirectory().appendingPathComponent(nonce + ".png")
+                                                try? data.write(to: filename)
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-                    DispatchQueue.main.async {
                         self.activityIndicator.isHidden = true
                         self.sources.sort(by: {$0[0] > $1[0]})
-                        self.sourcesTable.reloadData()
-                    }
-                })
+                        DispatchQueue.main.async {
+                            self.sourcesTable.reloadData()
+                        }
+                    })
+                }
             }
         }
+        self.requesting = false
     }
     
     func grabSocial(twtr_id: String) {
@@ -520,12 +530,13 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                         DispatchQueue.main.async {
 //                            self.activityIndicator.isHidden = true
                             self.sources.sort(by: {$0[0] > $1[0]})
-//                            self.sourcesTable.reloadData()
+                            self.sourcesTable.reloadData()
                         }
                     })
                 }
             })
         }
+        self.requesting = false
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -570,7 +581,7 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         slideMenuContainer.frame = SlideMenuView.frame
         menuFeedBtn.contentEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0)
         menuSourcesBtn.contentEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 0)
-        DispatchQueue.main.async {
+        DispatchQueue.global(qos: .background).async {
             self.setSources()
         }
         

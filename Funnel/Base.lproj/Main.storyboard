@@ -275,7 +275,7 @@
                         <subviews>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="uOE-Km-ySF">
                                 <rect key="frame" x="150" y="274" width="20" height="20"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                             </activityIndicatorView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="funnelBG" translatesAutoresizingMaskIntoConstraints="NO" id="a9g-in-U1i">
                                 <rect key="frame" x="0.0" y="-1" width="320" height="80"/>
@@ -529,25 +529,6 @@ Ut dapibus elit ut aliquam euismod. Fusce vitae mattis dui. Praesent non suscipi
                                     <action selector="show_backButtonPressed:" destination="BzW-3e-TEG" eventType="touchUpInside" id="sbU-fW-Pwj"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sNp-6g-Hb9" customClass="RoundedCornerView" customModule="Funnel" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="537" width="320" height="443"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Results may be limited due to network restrictions" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eN8-cT-PhW">
-                                        <rect key="frame" x="16" y="6" width="287" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="AvenirNextCondensed-Regular" family="Avenir Next Condensed" pointSize="15"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" red="0.93768988715277779" green="0.57516818576388884" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="6"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <gestureRecognizers/>
@@ -561,7 +542,6 @@ Ut dapibus elit ut aliquam euismod. Fusce vitae mattis dui. Praesent non suscipi
                         <outlet property="activityIndicator" destination="uOE-Km-ySF" id="9e8-X5-Z6W"/>
                         <outlet property="backgroundView" destination="a9g-in-U1i" id="cYr-dM-lKb"/>
                         <outlet property="funnelTitle" destination="9gV-To-bdH" id="cyS-20-tee"/>
-                        <outlet property="limitedNetworkView" destination="sNp-6g-Hb9" id="WXl-Pa-kYD"/>
                         <outlet property="menuBtn" destination="DRe-AC-w00" id="ZLX-8A-Ftp"/>
                         <outlet property="menuFeedBtn" destination="J1a-wF-gZG" id="2E8-X0-20Q"/>
                         <outlet property="menuSettingsBtn" destination="Rqv-oJ-Suc" id="qMR-KG-Aab"/>
@@ -1117,7 +1097,7 @@ Ut dapibus elit ut aliquam euismod. Fusce vitae mattis dui. Praesent non suscipi
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MGa-Wn-PQe">
-                                                    <rect key="frame" x="54" y="6" width="26" height="21"/>
+                                                    <rect key="frame" x="58" y="6" width="21" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                     <state key="normal" image="instagram icon enabled"/>
                                                     <connections>
@@ -1125,7 +1105,7 @@ Ut dapibus elit ut aliquam euismod. Fusce vitae mattis dui. Praesent non suscipi
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d1m-Aq-tg5">
-                                                    <rect key="frame" x="93" y="6" width="28" height="21"/>
+                                                    <rect key="frame" x="93" y="6" width="21" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                                     <state key="normal" image="facebook icon disabled"/>
                                                     <connections>
@@ -1133,7 +1113,7 @@ Ut dapibus elit ut aliquam euismod. Fusce vitae mattis dui. Praesent non suscipi
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J3s-G6-b0a">
-                                                    <rect key="frame" x="139" y="6" width="24" height="23"/>
+                                                    <rect key="frame" x="131" y="5" width="24" height="22"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                                     <state key="normal" image="twitter icon disabled"/>
                                                     <connections>
@@ -1145,15 +1125,15 @@ Ut dapibus elit ut aliquam euismod. Fusce vitae mattis dui. Praesent non suscipi
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="select network label" translatesAutoresizingMaskIntoConstraints="NO" id="3Dr-Sk-Ipb">
-                                                    <rect key="frame" x="212" y="13" width="102" height="11"/>
+                                                    <rect key="frame" x="211" y="12" width="103" height="12"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lI4-mm-Z40">
-                                                    <rect key="frame" x="264" y="19" width="26" height="23"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                    <rect key="frame" x="279" y="8" width="26" height="25"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wPQ-1r-P5h">
-                                                    <rect key="frame" x="181" y="6" width="16" height="21"/>
+                                                    <rect key="frame" x="170" y="5" width="16" height="20"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                                     <state key="normal" image="reddit icon disabled"/>
                                                     <connections>

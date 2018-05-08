@@ -10,13 +10,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Funnel/MainViewController.swift"
-            timestampString = "547152464.95169"
+            timestampString = "547508404.259334"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "292"
-            endingLineNumber = "292"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            startingLineNumber = "293"
+            endingLineNumber = "293"
+            landmarkName = "tableView(_:cellForRowAt:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -26,13 +26,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Funnel/MainViewController.swift"
-            timestampString = "547152464.9710521"
+            timestampString = "547508404.2706749"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "399"
-            endingLineNumber = "399"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            startingLineNumber = "402"
+            endingLineNumber = "402"
+            landmarkName = "setSources()"
+            landmarkType = "7">
             <Locations>
                <Location
                   shouldBeEnabled = "No"
