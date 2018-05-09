@@ -29,6 +29,7 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
     var social: [[String]] = []
     var table_time = 0
     var table_f = false
+    var rss_search: [[String]] = []
     
     @IBAction func dismissPressed(_ sender: Any) {
         UserDefaults.standard.set(self.social, forKey: "social")
@@ -68,7 +69,6 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
                         print("ERR:", err.localizedDescription)
                     } else {
                         print("DATA_FETCH_SUCCESS")
-                        print(String(data: res.data!, encoding: .utf8))
                     }
                 })
             }
@@ -92,7 +92,7 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             print(UserDefaults.standard.object(forKey: "social_media") as! [[String]])
         } else {
-            let indx = getIndexForObject(search: self.rss, obj: table_data[item])
+            let indx = getIndexForObject(search: self.rss, obj: [table_data[item][0], table_data[item][2]])
             self.rss.remove(at: indx)
             UserDefaults.standard.set(self.rss, forKey: "rss")
             UserDefaults.standard.synchronize()
@@ -106,19 +106,40 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @objc func addItem(index: Notification) {
         let item = index.userInfo!["index"] as! Int
-        table_data.append(search_data[item])
-        self.social.append([search_data[item][0], search_data[item][1]])
-        var social_override: [[String]] = []
-        for i in 0...self.social.count - 1 {
-            social_override.append([social[i][0], social[i][1]])
+        if(search_data[item][1] != "rss") {
+            table_data.append(search_data[item])
+            self.social.append([search_data[item][0], search_data[item][1]])
+            var social_override: [[String]] = []
+            for i in 0...self.social.count - 1 {
+                if(social[i][1] != "rss") {
+                    social_override.append([social[i][0], social[i][1]])
+                }
+            }
+            UserDefaults.standard.set(social_override, forKey: "social_media")
+            UserDefaults.standard.synchronize()
+            print("adding \(item)...")
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+            syncDB()
+        } else {
+            let item = index.userInfo!["index"] as! Int
+            table_data.append(search_data[item])
+            self.rss.append([search_data[item][0], search_data[item][2]])
+            var social_override: [[String]] = []
+            for i in 0...self.rss.count - 1 {
+                if(rss[i][1] != "rss") {
+                    social_override.append([rss[i][0], rss[i][1]])
+                }
+            }
+            UserDefaults.standard.set(rss, forKey: "rss")
+            UserDefaults.standard.synchronize()
+            print("adding \(item)(rss)...")
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+            syncDB()
         }
-        UserDefaults.standard.set(social_override, forKey: "social_media")
-        UserDefaults.standard.synchronize()
-        print("adding \(item)...")
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
-        syncDB()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -138,7 +159,8 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
             cell.btn_index = indexPath.row
             var foundItem = false
             for i in 0...table_data.count - 1 {
-                if(table_data[i] == search_data[indexPath.row]) {
+                print(table_data[i], "->", search_data[indexPath.row])
+                if(table_data[i] == search_data[indexPath.row] || table_data[i] == [search_data[indexPath.row][0], search_data[indexPath.row][1]]) {
                     foundItem = true
                     cell.btn_index = i
                 }
@@ -192,6 +214,16 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
         
+        Alamofire.request("https://bamboo-us.com/ProjectFeed/feed_db.php").responseJSON{ response in
+            print("Request")
+            if let array = response.result.value as? [NSArray] {
+                print("Data")
+                for a in array {
+                    self.rss_search.append([a[0] as! String, a[1] as! String])
+                }
+            }
+        }
+        
         
         searchField.addTarget(self, action: #selector(textFieldDidChange(textField:)), for: UIControlEvents.editingChanged)
         searchField.delegate = self
@@ -221,7 +253,7 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
                     self.searchReddit(str: txt!)
                     break
                 case "rss":
-                    
+                    self.searchRss(str: txt!)
                     break
                 default:
                     print("FATAL: Invalid Button State '" + self.btnPressed + "' @ SourcesViewController")
@@ -234,8 +266,25 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
                 }
             } else {
                 self.tableState = "source"
+                DispatchQueue.main.async {
+                    
+                    self.reloadTable()
+                }
             }
             
+        }
+    }
+    
+    func searchRss(str: String) {
+        self.search_data = []
+        print(self.rss)
+        for t in rss_search {
+            if(t[0].lowercased().range(of: str.lowercased()) != nil) {
+                self.search_data.append([t[0], "rss", t[1]])
+            }
+        }
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
         }
     }
     
