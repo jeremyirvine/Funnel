@@ -518,6 +518,9 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                                                 
                                                 print("\(String(describing: indexed["screen_name"]))")
                                                 self.socialMediaSort.append(indexed["screen_name"] as! String)
+                                                DispatchQueue.main.async {
+                                                    self.rssTable.reloadData()
+                                                }
                                             }
                                         } else if(json.count == 1) {
                                             let indexed = json[0] as! [String: Any]
@@ -564,6 +567,10 @@ class SetupSourcesViewController : UIViewController, UITableViewDelegate, UITabl
                     print("Error: Button State is invalid (SetupSourcesViewController 487 : 17)")
                 }
             }
+        }
+        DispatchQueue.main.async {
+            
+            self.rssTable.reloadData()
         }
     }
     

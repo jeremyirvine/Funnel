@@ -32,6 +32,7 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @IBAction func dismissPressed(_ sender: Any) {
         UserDefaults.standard.set(self.social, forKey: "social")
+        NotificationCenter.default.post(name: Notification.Name("reloadMainTable"), object: nil)
         self.dismiss(animated: true)
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -226,13 +227,15 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
                     print("FATAL: Invalid Button State '" + self.btnPressed + "' @ SourcesViewController")
                     break
                 }
+                
+                DispatchQueue.main.async {
+                    
+                    self.reloadTable()
+                }
             } else {
                 self.tableState = "source"
             }
-            DispatchQueue.main.async {
-                
-                self.reloadTable()
-            }
+            
         }
     }
     

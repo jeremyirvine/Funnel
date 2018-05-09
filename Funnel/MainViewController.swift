@@ -505,6 +505,15 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.requesting = false
     }
     
+    @objc func reloadTable() {
+        DispatchQueue.global(qos: .background).async {
+            self.setSources()
+            DispatchQueue.main.async {
+                self.sourcesTable.reloadData()
+            }
+        }
+    }
+    
     func grabSocial(twtr_id: String) {
         print("Getting social for \(twtr_id)...")
         if let userID = UserDefaults.standard.string(forKey: "twt_key") {
@@ -561,6 +570,11 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             self,
             selector: #selector(self.handleDidTouch),
             name: NSNotification.Name("handleTouch"),
+            object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.reloadTable),
+            name: NSNotification.Name("reloadMainTable"),
             object: nil)
         let gesture = UITapGestureRecognizer(target: self, action:  #selector(self.closeDrawer))
         self.sourcesTable.addGestureRecognizer(gesture)
