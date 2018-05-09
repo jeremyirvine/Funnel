@@ -5,4 +5,4 @@ BugFix 0-1:
  - Killed a couple of FireAnts /s
 
 BugFix 0-2:
- - Fixed a bug on the Manage Sources page where the current sources would not display without the search method manually calling the 'self.tableView.reloadTable() instead of the textFieldDidChange calling every time
+ - Fixed a bug on the Manage Sources page where the current sources would not display without the search method manually calling the 'self.tableView.reloadTable()' instead of the textFieldDidChange calling every time
