@@ -406,7 +406,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             socialData.forEach { (source) in
                 print(source[0])
                 if(source[1] == "twitter") {
-                    print()
                     self.grabSocial(twtr_id: source[0])
                 } else if (source[1] == "reddit") {
                     self.grabSocial(reddit_id: source[0])

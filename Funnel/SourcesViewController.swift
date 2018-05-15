@@ -30,6 +30,7 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
     var table_time = 0
     var table_f = false
     var rss_search: [[String]] = []
+    let fb_access_token = "1885818195082007|ml3-08MDaLy3ZfUqUh4THDg99Wo".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
     
     @IBAction func dismissPressed(_ sender: Any) {
         UserDefaults.standard.set(self.social, forKey: "social")
@@ -244,7 +245,7 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
                     self.searchTwitter(str: txt!)
                     break
                 case self.FACEBOOK:
-                    
+                    self.searchFacebook(str: txt!)
                     break
                 case self.INSTAGRAM:
                     
@@ -272,6 +273,29 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
                 }
             }
             
+        } 
+    }
+    
+    func searchFacebook(str: String) {
+        let search_q = str.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+        print("https://graph.facebook.com/search?q=\(String(describing: search_q!))&type=page&access_token=\(String(describing: fb_access_token!))&limit=10")
+        Alamofire.request("https://graph.facebook.com/search?q=\(String(describing: search_q!))&type=page&access_token=\(String(describing: fb_access_token!))&limit=10").responseJSON { response in
+            print(response.result.value)
+            if let data = response.result.value as? [String: Any] {
+                print(data)
+                if let searchItems = data["data"] as? [[String: String]] {
+                    var sa: [String] = []
+                    var sid: [String] = []
+                    if(searchItems.count != 0) {
+                        for inc in 0...searchItems.count - 1 {
+                            sa.append(searchItems[inc]["name"]!)
+                            sid.append(searchItems[inc]["id"]!)
+                        }
+                    }
+                    print(sa)
+                    print(sid)
+                }
+            }
         }
     }
     
