@@ -241,7 +241,6 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            print("Processing Cell...")
             let cell = tableView.dequeueReusableCell(withIdentifier: "sourceCell", for: indexPath) as! SourceListCell
             cell.articlePreview.text = sources[indexPath.row][1]
             cell.articleTitle.text = sources[indexPath.row][0]
@@ -358,21 +357,14 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         let ud = UserDefaults.standard
         let rssData = ud.object(forKey: "rss") as! [[String]]
         let socialData = ud.object(forKey: "social_media") as! [[String]]
-        print(rssData.count)
         rssData.forEach { (source) in
             let feedurl = URL(string: source[1])
-            print("Searching: \(feedurl!)...")
-           
-            print("URL:", source[1])
             let parser = FeedParser(URL: feedurl!)
             DispatchQueue.global(qos: .background).async {
                 parser?.parseAsync(result: { (result) in
-                    print("Success")
-                    print(result.error?.localizedDescription)
                     result.rssFeed?.items?.forEach({ (entry) in
     //                    print(entry.)
                         let str = entry.content?.contentEncoded?.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil).replacingOccurrences(of: "\n", with: "")
-                        print(entry.dublinCore?.dcCreator)
                         self.sources.append([entry.title!, str!, (result.rssFeed?.image?.url!) ?? "", "nope", source[0], (entry.pubDate?.toString(dateFormat: "MM-dd-yyy"))!, entry.link!])
     //                    DispatchQueue.main.async {
     //                        self.sources.sort(by: {$0[0] > $1[0]})

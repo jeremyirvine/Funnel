@@ -36,9 +36,7 @@ class SettingsViewController: UIViewController {
         }
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (_) in
             let password = alert?.textFields![0]
-            let email = alert?.textFields![1]
-            print("Password field: \(password?.text)")
-            print("Email field: \(email?.text)")
+            let newPassword = alert?.textFields![1]
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
@@ -55,23 +53,21 @@ class SettingsViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (_) in
             let password = alert?.textFields![0]
             let email = alert?.textFields![1]
-            print("Password field: \(password?.text)")
-            print("Email field: \(email?.text)")
             let username = UserDefaults.standard.string(forKey: "login_username")
             let nonce = UserDefaults.standard.string(forKey: "login_key")
             let part1: String = "http://bamboo-us.com/ProjectFeed/services.php?q=edit_email&p=" + password!.text!
             let part2: String =  "&u=" + username!
             let part3: String =  "&nonce=" + nonce!
             let part4: String =  "&email=" + email!.text!
-            print(part1 + part2 + part3 + part4)
-            Alamofire.request(part1 + part2 + part3 + part4).response{  (res) in
-                print(String(data: res.data!, encoding: .utf8))
-                if(String(data: res.data!, encoding: .utf8) == "success") {
-                    UserDefaults.standard.set(email!.text!, forKey: "login_email")
-                    self.usr_email.text = email!.text!
-                } else {
-                    let al = UIAlertController(title: "Error", message: "Incorrect password", preferredStyle: .alert)
-                    self.present(al, animated:true, completion: nil)
+            if(email!.text! != UserDefaults.standard.string(forKey: "login_email")) {
+                Alamofire.request(part1 + part2 + part3 + part4).response{  (res) in
+                    if(String(data: res.data!, encoding: .utf8) == "success") {
+                        UserDefaults.standard.set(email!.text!, forKey: "login_email")
+                        self.usr_email.text = email!.text!
+                    } else {
+                        let al = UIAlertController(title: "Error", message: "Incorrect password", preferredStyle: .alert)
+                        self.present(al, animated:true, completion: nil)
+                    }
                 }
             }
 //            Alamofire.request()
