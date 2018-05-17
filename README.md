@@ -7,6 +7,9 @@
 
 <hr>
 
+#### May 17, 2018
+- Added Edit Password
+
 #### May 15, 2018
 - Added Edit Email
 

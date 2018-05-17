@@ -37,6 +37,25 @@ class SettingsViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (_) in
             let password = alert?.textFields![0]
             let newPassword = alert?.textFields![1]
+            let username = UserDefaults.standard.string(forKey: "login_username")
+            let nonce = UserDefaults.standard.string(forKey: "login_key")
+            Alamofire.request("https://bamboo-us.com/ProjectFeed/services.php?q=edit_password&u=" + username! + "&nonce=" + nonce! + "&p=" + password!.text! + "&np=" + newPassword!.text!).response { (res) in
+                if (String(data: res.data!, encoding: .utf8) == "incorrect_password") {
+                    let al = UIAlertController(title: "Error", message: "Incorrect password", preferredStyle: .alert)
+                    al.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                    self.present(al, animated:true, completion: nil)
+                } else if (String(data: res.data!, encoding: .utf8) == "success") {
+                    print("Password Changed Success!")
+                    let al = UIAlertController(title: "Success", message: "Your password has been changed!", preferredStyle: .alert)
+                    self.present(al, animated: true, completion: nil)
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                        al.dismiss(animated: true, completion: nil)
+                    })
+                } else {
+                    print(String(data: res.data!, encoding: .utf8))
+                }
+            }
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
@@ -64,9 +83,12 @@ class SettingsViewController: UIViewController {
                     if(String(data: res.data!, encoding: .utf8) == "success") {
                         UserDefaults.standard.set(email!.text!, forKey: "login_email")
                         self.usr_email.text = email!.text!
-                    } else {
+                    } else if (String(data: res.data!, encoding: .utf8) == "incorrect_password") {
                         let al = UIAlertController(title: "Error", message: "Incorrect password", preferredStyle: .alert)
+                        al.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
                         self.present(al, animated:true, completion: nil)
+                    } else {
+                        print(String(data: res.data!, encoding: .utf8))
                     }
                 }
             }

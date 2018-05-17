@@ -464,30 +464,34 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
                             DispatchQueue.main.async {
                                 self.activityIndicator.isHidden = true
                                 self.sources.sort(by: {$0[0] > $1[0]})
-                                self.sourcesTable.reloadData()
+//                                self.sourcesTable.reloadDa ta()
                                 
                             }
                            return
                         } else {
                             do {
-                                if let url = URL(string: thumbnail) {
-                                    if let data = try? Data(contentsOf: url) {
-                                        if let source = UIImage(data: data) {
-                                            if let data = UIImagePNGRepresentation(source) {
-                                                let nonce = UUID().uuidString
-                                                self.imageNames[thumbnail] = nonce
-                                                let filename = self.getDocumentsDirectory().appendingPathComponent(nonce + ".png")
-                                                try? data.write(to: filename)
+                                DispatchQueue.global(qos: .background).async {
+                                    if let url = URL(string: thumbnail) {
+                                        if let data = try? Data(contentsOf: url) {
+                                            if let source = UIImage(data: data) {
+                                                if let data = UIImagePNGRepresentation(source) {
+                                                    let nonce = UUID().uuidString
+                                                    self.imageNames[thumbnail] = nonce
+                                                    let filename = self.getDocumentsDirectory().appendingPathComponent(nonce + ".png")
+                                                    try? data.write(to: filename)
+//                                                    self.reloadTable()
+                                                }
                                             }
                                         }
                                     }
                                 }
+                                
                             }
                         }
                         self.activityIndicator.isHidden = true
                         self.sources.sort(by: {$0[0] > $1[0]})
                         DispatchQueue.main.async {
-                            self.sourcesTable.reloadData()
+//                            self.sourcesTable.reloadData()
                         }
                     })
                 }
